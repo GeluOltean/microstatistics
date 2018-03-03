@@ -1,0 +1,10 @@
+#!/usr/bin/python3 python
+
+from __init__ import * 
+
+def main():
+	app = QtWidgets.QApplication(sys.argv)
+	Gui = Microstatistics()
+	sys.exit(app.exec_())
+
+# main()
