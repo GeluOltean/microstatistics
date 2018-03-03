@@ -9,15 +9,16 @@ setup(
 	author_email='geluoltean8@gmail.com',
 	url='https://github.com/GeluOltean/microstatistics',
 	license='GNU GPL 3',
-	# install_requires=['PyQt5', 'scipy', 'matplotlib', 'numpy', 	'pandas', 
-	# 'scipy', 'sklearn', 'openpyxl',],
+	install_requires=['PyQt5', 'scipy', 'matplotlib', 'numpy', 'pandas', 
+	'scipy', 'sklearn', 'openpyxl',],
 	classifiers=[
 		'Development Status :: 3 - Alpha', 
-		'Environment :: X11 Applications :: Qt,'
-		'Environment :: Console,'
-		'Intended Audience :: Science/Research,'
-		'License :: OSI Approved :: GNU General Public License v3 (GPLv3),'
-		'Programming Language :: Python :: 3.6,'],
+		'Environment :: X11 Applications :: Qt',
+		'Environment :: Console',
+		'Operating System :: OS Independent',
+		'Intended Audience :: Science/Research',
+		'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+		'Programming Language :: Python :: 3.6',],
 	# script=['microstatistics/microstatistics-start'],
 	entry_points={
 		'console_scripts': [
