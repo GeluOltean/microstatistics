@@ -1,0 +1,3 @@
+[console_scripts]
+microstatistics-start = microstatistics.command_line:main
+

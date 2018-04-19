@@ -1,0 +1,18 @@
+Metadata-Version: 1.1
+Name: microstatistics
+Version: 0.2.1
+Summary: A package for micropalaeontological statisics with a Qt5 gui. Launched with microstatistics-start
+Home-page: https://github.com/GeluOltean/microstatistics
+Author: Gelu Oltean
+Author-email: geluoltean8@gmail.com
+License: GNU GPL 3
+Description-Content-Type: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: X11 Applications :: Qt
+Classifier: Environment :: Console
+Classifier: Operating System :: OS Independent
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Programming Language :: Python :: 3.6
