@@ -2,10 +2,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QCoreApplication, Qt
 from PyQt5.QtGui import QIcon, QColor
 from PyQt5.QtWidgets import QAction, QMessageBox, QCalendarWidget, QFontDialog, QColorDialog, QTextEdit, QFileDialog, QCheckBox, QProgressBar, QComboBox, QLabel, QStyleFactory, QLineEdit, QInputDialog, QApplication, QWidget, QMainWindow, QPushButton
-from .diversities import *
-from .gui_microstatistics import Ui_MainWindow
-from .gui_manual import Ui_Manual
-from .gui_licence import Ui_Licence
+from diversities import *
+from gui_microstatistics import Ui_MainWindow
+from gui_manual import Ui_Manual
+from gui_licence import Ui_Licence
 from scipy.misc import comb
 from math import log
 from matplotlib import pyplot as plt
@@ -47,10 +47,10 @@ class Application(QMainWindow, Ui_MainWindow):
 			sys.exit()
 
 		try:
-			self.columns = pd.read_excel(self.path)
-			self.columns = self.columns.reset_index().T	
-			self.columns = self.columns.drop(self.columns.index[:1], axis=0)
+			self.columns = pd.read_excel(self.path, header=None, names=None, index_col=None, skiprows=None)
+			self.columns = self.columns.drop([0], axis=1).drop([0], axis=0).T
 			self.sampleDistance = dist.pdist(self.columns.values, metric='braycurtis')
+			self.speciesDistance = dist.pdist(self.columns.values.T, metric='braycurtis')
 			self.columns = self.columns.values.tolist()
 
 		except ValueError:
@@ -77,8 +77,8 @@ class Application(QMainWindow, Ui_MainWindow):
 	def file_reopen(self):
 		try:
 			self.path = self.file_open()
-			self.columns = pd.read_excel(self.path, index=False)
-			self.columns = self.columns.reset_index().T
+			self.columns = pd.read_excel(self.path, header=None, names=None, index_col=None, skiprows=None)
+			self.columns = self.columns.drop([0], axis=1).drop([0], axis=0).T
 			self.sampleDistance = dist.pdist(self.columns.values, metric='braycurtis')
 			self.columns = self.columns.values.tolist()
 
@@ -324,8 +324,15 @@ class Application(QMainWindow, Ui_MainWindow):
 				fig = plt.figure(dpi=500)
 				linkage = hc.linkage(self.sampleDistance, method='average')
 				dendrog = hc.dendrogram(linkage, labels=list(range(0, len(self.columns)+2)))
-				plt.suptitle('Dendrogram (Bray-Curtis)')
-				plt.savefig(self.saveLocation.text() + '/Dendrogram.svg')
+				plt.suptitle('Dendrogram for samples (Bray-Curtis)')
+				plt.savefig(self.saveLocation.text() + '/Sample_Dendrogram.svg')
+
+				fig = None
+				fig = plt.figure(dpi=800)
+				linkage = hc.linkage(self.speciesDistance, method='average')
+				dendrog = hc.dendrogram(linkage, orientation='left', labels=list(range(0, len(linkage)+2)))
+				plt.suptitle('Dendrogram for species (Bray-Curtis)')
+				plt.savefig(self.saveLocation.text() + '/Species_Dendrogram.svg')
 
 
 			if self.checkboxNMDS.isChecked():
