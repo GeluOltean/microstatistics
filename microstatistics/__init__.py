@@ -2,10 +2,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QCoreApplication, Qt
 from PyQt5.QtGui import QIcon, QColor
 from PyQt5.QtWidgets import QAction, QMessageBox, QCalendarWidget, QFontDialog, QColorDialog, QTextEdit, QFileDialog, QCheckBox, QProgressBar, QComboBox, QLabel, QStyleFactory, QLineEdit, QInputDialog, QApplication, QWidget, QMainWindow, QPushButton
-from diversities import *
-from gui_microstatistics import Ui_MainWindow
-from gui_manual import Ui_Manual
-from gui_licence import Ui_Licence
+from .diversities import *
+from .gui_microstatistics import Ui_MainWindow
+from .gui_manual import Ui_Manual
+from .gui_licence import Ui_Licence
 from scipy.misc import comb
 from math import log
 from matplotlib import pyplot as plt
