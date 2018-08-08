@@ -3,14 +3,14 @@ from setuptools import setup, find_packages
 setup(
 	name='microstatistics',
 	packages=find_packages(),
-	version='0.2.2',
+	version='0.3',
 	description='A package for micropalaeontological statisics with a Qt5 gui. Launched with microstatistics-start. Requires installtion through pip3.',
 	author='Gelu Oltean',
 	author_email='geluoltean8@gmail.com',
 	url='https://github.com/GeluOltean/microstatistics',
 	license='GNU GPL 3',
 	install_requires=['PyQt5', 'scipy', 'matplotlib', 'numpy', 'pandas', 
-	'scipy', 'sklearn', 'xlrd',],
+	'scipy', 'sklearn', 'xlrd'],
 	classifiers=[
 		'Development Status :: 3 - Alpha', 
 		'Environment :: X11 Applications :: Qt',
