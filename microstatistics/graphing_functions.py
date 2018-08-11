@@ -2,8 +2,11 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from diversities import dfProportion
+from scipy.cluster import hierarchy as hc
+from scipy.spatial import distance as dist
+from sklearn.manifold import MDS
 
-def graphIndex(lst, title: str):
+def graphIndex(lst, title: str, saveloc: str):
 	"""Represents the list resulted from the calculation of an index. Requires
 	an iterable collection and a title as input."""
 	holder = lst
@@ -15,13 +18,14 @@ def graphIndex(lst, title: str):
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
 	plt.yticks(yaxis)
 	plt.ylabel("Sample number")
-	plt.show()
 
-def graphPercentages(frame, index, title: str):
+	savename = "/" + title + ".svg"
+	plt.savefig(saveloc + savename)
+
+def graphPercentages(frame, index, title: str, saveloc: str):
 	"""Represents a row from a dataframe (a chosen species) by their proportion
 	in a sample (column). Requires a dataframe object, an index, and a title as
 	input. """
-	# catch out of bounds error
 	holder = dfProportion(frame) * 100 
 	holder = holder.replace(np.nan, 0)
 	plt.figure(dpi = 200, figsize=(5,5))
@@ -31,16 +35,22 @@ def graphPercentages(frame, index, title: str):
 	plt.yticks(yaxis)
 	plt.plot(holder.iloc[index], yaxis, c="black")
 	plt.ylabel("Sample number")
-	plt.plot()
-	plt.show()
 
-def graphMorphogroups(frame):
+	savename = "/" + title + ".svg"
+	plt.savefig(saveloc + savename)
+
+def graphMorphogroups(frame, saveloc: str):
 	"""Represents the proportion of each morphogroup, displaying foram 
 	distribution by morphogroup. Requires a dataframe object as input."""
 	holder = dfProportion(frame)
-	holder = holder.transpose() * 100
-	morphogroups = ['M1', 'M2a', 'M2b', 'M2c', 'M3a', 'M3b', 'M3c', 'M4a', 'M4b']
 
+	if(len(holder) > 9):
+		raise ValueError("The required formatting has not been respected. "
+		"Please consult the documentation as to the proper formatting required "
+		"for this index.")
+	holder = holder.transpose() * 100
+
+	morphogroups = ['M1', 'M2a', 'M2b', 'M2c', 'M3a', 'M3b', 'M3c', 'M4a', 'M4b']
 	plt.figure(dpi = 200, figsize = (5,5))
 	yaxis = [x+1 for x in range(len(holder))]
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
@@ -51,11 +61,13 @@ def graphMorphogroups(frame):
 		plt.xlabel(morphogroups[i])
 		plt.yticks(yaxis) #
 		plt.gca().set_ylim(1, len(yaxis))
-	
+		
 	plt.suptitle("Morphogroup abundances\n")
-	plt.show()
 
-def graphEpiInfDetailed(frame):
+	savename = "/Morphogroup abundances.svg"
+	plt.savefig(saveloc + savename)
+
+def graphEpiInfDetailed(frame, saveloc: str):
 	"""Represents the epifaunal to infaunal proportions by displaying foram
 	proportions by their respective environment. Requires a dataframe object
 	as input. """
@@ -89,4 +101,51 @@ def graphEpiInfDetailed(frame):
 
 	plt.subplot(111).legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
           fancybox=True, shadow=True, ncol=5, borderaxespad=2)
-	plt.show()
+	
+	savename = "/Detailed Epi-Infaunal.svg"
+	plt.savefig(saveloc + savename)
+
+##### MULTIVARIATE INDICES #####
+
+def graphSampleDendrogram(frame, saveloc: str):
+	labl = list(range(1, len(frame.T)+1))
+	sampleDistance = dist.pdist(frame.T, metric="braycurtis")
+	plt.figure(dpi=500)
+	linkage = hc.linkage(sampleDistance, method="average")
+	dendrog = hc.dendrogram(linkage, labels=labl)
+	plt.suptitle("Dendrogram for samples (Bray-Curtis)")
+
+	savename = "/Sample Dendrogram.svg"
+	plt.savefig(saveloc + savename)
+
+def graphSpeciesDendrogram(frame, saveloc: str):
+	labl = list(range(1, len(frame)+1))
+	speciesDistance = dist.pdist(frame, metric="braycurtis")
+	plt.figure(dpi=800)
+	linkage = hc.linkage(speciesDistance, method="average")
+	dendrog = hc.dendrogram(linkage, orientation="left", labels=labl)
+	plt.suptitle("Dendrogram for species (Bray-Curtis)")
+
+	savename = "/Species Dendrogram.svg"
+	plt.savefig(saveloc + savename)
+
+def graphNMDS(frame, dim, runs, saveloc: str):
+	labl = list(range(1, len(frame.T)+1))
+	sampleDistance = dist.pdist(frame.T, metric="braycurtis")
+	squareDist = dist.squareform(sampleDistance)
+
+	nmds = MDS(n_components=dim, metric=False, dissimilarity="precomputed", max_iter=runs, n_init=30)
+	pos = nmds.fit(squareDist).embedding_
+	stress = nmds.fit(squareDist).stress_
+
+	pos0 = pos[:,0].tolist()
+	pos1 = pos[:,1].tolist()
+	fig, ax = plt.subplots()
+	ax.scatter(pos0, pos1)
+	for i, x in enumerate(labl):
+		ax.annotate(x + 1, (pos0[i], pos1[i]))
+	fig.suptitle("nMDS (Bray-Curtis)")
+	ax.set_title(f"Stress = {str(stress)}")
+
+	savename = "/nMDS.svg"
+	plt.savefig(saveloc + savename)

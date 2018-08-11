@@ -2,22 +2,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QCoreApplication, Qt
 from PyQt5.QtGui import QIcon, QColor
 from PyQt5.QtWidgets import QAction, QMessageBox, QCalendarWidget, QFontDialog, QColorDialog, QTextEdit, QFileDialog, QCheckBox, QProgressBar, QComboBox, QLabel, QStyleFactory, QLineEdit, QInputDialog, QApplication, QWidget, QMainWindow, QPushButton
-from .gui_microstatistics import Ui_MainWindow
-from .gui_manual import Ui_Manual
-from .gui_licence import Ui_Licence
-from .diversities import *
-from .graphing_functions import *
-from scipy.misc import comb
-from math import log
-from matplotlib import pyplot as plt
-from matplotlib.ticker import MaxNLocator
-import numpy as np
+from gui_microstatistics import Ui_MainWindow
+from gui_manual import Ui_Manual
+from gui_licence import Ui_Licence
+from diversities import *
+from graphing_functions import *
 import pandas as pd
-from scipy.cluster import hierarchy as hc
-from scipy.spatial import distance as dist
-from sklearn.manifold import MDS
 import sys
-import math
 
 class Application(QMainWindow, Ui_MainWindow):
 	def __init__(self):
@@ -50,8 +41,6 @@ class Application(QMainWindow, Ui_MainWindow):
 		try:
 			self.columns = pd.read_excel(self.path, index_col=None, header=None, names=None, skiprows=1).drop([0], axis=1)
 			self.columns.columns = range(len(self.columns.T))
-			self.sampleDistance = dist.pdist(self.columns.values.T, metric='braycurtis')
-			self.speciesDistance = dist.pdist(self.columns.values, metric='braycurtis')
 
 		except ValueError:
 			colError = QMessageBox.warning(self, 'Input error', 'The spreadsheet'
@@ -72,15 +61,11 @@ class Application(QMainWindow, Ui_MainWindow):
 			sys.exit()
 		return fileName
 
-		# other spreadsheet formats could be added later on 
-
 	def file_reopen(self):
 		try:
 			self.path = self.file_open()
 			self.columns = pd.read_excel(self.path, index_col=None, header=None, names=None, skiprows=1).drop([0], axis=1)
 			self.columns.columns = range(len(self.columns.T))
-			self.sampleDistance = dist.pdist(self.columns.values.T, metric='braycurtis')
-			self.speciesDistance = dist.pdist(self.columns.values, metric='braycurtis')
 
 		except:
 			wrongFile = QMessageBox.warning(self, 'Error', 'Please select a spreadsheet.')
@@ -103,79 +88,94 @@ class Application(QMainWindow, Ui_MainWindow):
 
 	def calculate(self):
 		try:
-			# UNIVARIATE INDICES
+			savePath = self.saveLocation.text()
+
 			if self.checkboxFisher.isChecked():
-				graphIndex(dfFisher(self.columns), 'Fisher diversity')
+				graphIndex(dfFisher(self.columns), 'Fisher diversity', savePath)
 
 			if self.checkboxSimpson.isChecked():
-				graphIndex(dfSimpson(self.columns), 'Simpson diversity')
+				graphIndex(dfSimpson(self.columns), 'Simpson diversity', savePath)
 
 			if self.checkboxShannon.isChecked():
-				graphIndex(dfShannon(self.columns), 'Shannon diversity')
+				graphIndex(dfShannon(self.columns), 'Shannon diversity', savePath)
 
 			if self.checkboxEquitability.isChecked():
-				graphIndex(dfEquitability(self.columns), 'Equitability')
+				graphIndex(dfEquitability(self.columns), 'Equitability', savePath)
 
 			if self.checkboxHurlbert.isChecked():
 				corr = self.spinBoxHurlbert.value()
-				graphIndex(dfHurlbert(self.columns, corr), f'Hurlbert diversity, size {corr}')
+				graphIndex(dfHurlbert(self.columns, corr), f'Hurlbert diversity, size {corr}', savePath)
 
 			if self.checkboxBFOI.isChecked():
-				graphIndex(dfBFOI(self.columns), 'BFOI')
+				graphIndex(dfBFOI(self.columns), 'BFOI', savePath)
 
 			if self.checkboxRelAbundance.isChecked():
 				row = self.spinBoxRelAbundance.value()
-				graphPercentages(self.columns, row-2, f'Abundance of species on row {row}')
+				graphPercentages(self.columns, row-2, f'Abundance of species on row {row}', savePath)
 
 			if self.checkboxPlankBent.isChecked():
-				graphPercentages(self.columns, 0, 'P/B ratio')
+				try:
+					if(len(self.columns) != 2): # 2 rows required
+						raise ValueError("The required formatting has not been"
+						" respected. Please consult the documentation.")
+					graphPercentages(self.columns, 0, 'P-B ratio', savePath)
+				except(ValueError):
+					colError = QMessageBox.warning(self, 'Input error', 'The requir'
+					'ed formatting has not been respected. Please consult the'
+					' documentation for the proper formatting required for '
+					'graphing the Planktonic to Benthic ratio.')
 
 			if self.checkboxEpifaunalInfauntal.isChecked():
-				graphPercentages(self.columns, 0, 'Epifaunal/Infaunal ratio')
+				try:
+					if(len(self.columns) != 2): # 2 rows required
+						raise ValueError("The required formatting has not been"
+						" respected. Please consult the documentation.")
+					graphPercentages(self.columns, 0, 'Epifaunal-Infaunal ratio', savePath)
+				except(ValueError):
+					colError = QMessageBox.warning(self, 'Input error', 'The requir'
+					'ed formatting has not been respected. Please consult the'
+					' documentation for the proper formatting required for '
+					'graphing the Epifaunal to Infaunal ratio.')
 
 			if self.checkboxEpifaunalInf3.isChecked():
-				graphEpiInfDetailed(self.columns)
+				try:
+					if(len(self.columns) != 4):
+						raise ValueError("The required formatting has not been"
+						" respected. Please consult the documentation.")
+					graphEpiInfDetailed(self.columns, savePath)
+				except(ValueError):
+					colError = QMessageBox.warning(self, 'Input error', 'The requir'
+					'ed formatting has not been respected. Please consult the'
+					' documentation for the proper formatting required for '
+					'graphing the detailed Epifaunal to Infaunal ratio.')
 
-			if self.checkboxMorphogroups.isChecked():
-				graphMorphogroups(self.columns)
+			try:
+				if self.checkboxMorphogroups.isChecked():
+					try:
+						if(len(self.columns) > 9):
+							raise ValueError("The required formatting has not been respected. "
+							"Please consult the documentation.")
+						graphMorphogroups(self.columns, savePath)
+					except(ValueError):
+						colError = QMessageBox.warning(self, 'Input error', 'The requir'
+						'ed formatting has not been respected. Please consult the'
+						' documentation for the proper formatting required for '
+						'graphing Morphogroup abundances.')
+			except(ValueError):
+				colError = QMessageBox.warning(self, 'Input error', 'The requir'
+				'ed formatting has not been respected. Please consult the docum'
+				'entation for the proper formatting required for graphing '
+				'morphogroup abundances.')
+
 
 			if self.checkboxDendrogram.isChecked():
-				fig = plt.figure(dpi=500)
-				linkage = hc.linkage(self.sampleDistance, method='average')
-				dendrog = hc.dendrogram(linkage, labels=list(range(0, len(self.columns)+2)))
-				plt.suptitle('Dendrogram for samples (Bray-Curtis)')
-				plt.savefig(self.saveLocation.text() + '/Sample_Dendrogram.svg')
-
-				fig = None
-				fig = plt.figure(dpi=800)
-				linkage = hc.linkage(self.speciesDistance, method='average')
-				dendrog = hc.dendrogram(linkage, orientation='left', labels=list(range(0, len(linkage)+2)))
-				plt.suptitle('Dendrogram for species (Bray-Curtis)')
-				plt.savefig(self.saveLocation.text() + '/Species_Dendrogram.svg')
-
+				graphSampleDendrogram(self.columns, savePath)
+				graphSpeciesDendrogram(self.columns, savePath)
 
 			if self.checkboxNMDS.isChecked():
 				dimens = self.spinBoxDimensions.value()
 				runs = self.spinBoxRuns.value()
-				squareDist = dist.squareform(self.sampleDistance)
-
-				nmds = MDS (n_components=dimens, metric=False, dissimilarity='precomputed',
-				        max_iter=runs, n_init=30)
-				pos = nmds.fit(squareDist).embedding_
-				strs = nmds.fit(squareDist).stress_
-				labels = list(range(0, len(self.columns.T)))
-
-				pos0 = pos[:,0].tolist()
-				pos1 = pos[:,1].tolist()
-
-				fig, ax = plt.subplots()
-				ax.scatter(pos0, pos1)
-				for i, x in enumerate(labels):
-					ax.annotate(x+1, (pos0[i], pos1[i]))
-				fig.suptitle('nDMS (Bray-Curtis)', fontweight='bold')
-				ax.set_title('Stress = ' + str(strs))
-
-				plt.savefig(self.saveLocation.text() + '/' + 'nMDS.svg')
+				graphNMDS(self.columns, dimens, runs, savePath)
 
 			finished = QMessageBox.information (self, 'Finished',
 			'The selected operations have been performed. The plots have been'
@@ -184,10 +184,9 @@ class Application(QMainWindow, Ui_MainWindow):
 		except (TypeError, ValueError):
 			colError = QMessageBox.warning(self, 'Input error', 'The spreadsheet'
 			' contains empty cells, rows or columns which are taken into account.\n'
-			'\nPlease verify that all cells contain exclusively numerical data, and', 
+			'\nPlease verify that all cells contain exclusively numerical data, and' 
 			'then copy the input data into a new .xlsx file\n', )
 			sys.exit()
-
 
 def run():
 	app = QtWidgets.QApplication(sys.argv)
