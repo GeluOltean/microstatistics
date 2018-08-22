@@ -3,8 +3,8 @@ from setuptools import setup, find_packages
 setup(
 	name='microstatistics',
 	packages=find_packages(),
-	version='0.3.2',
-	description='A package for micropalaeontological statisics with a Qt5 gui. Launched with microstatistics-start. Requires installtion through pip3.',
+	version='0.3.6',
+	description='A package for micropalaeontological statisics with a Qt5 gui. Launched with microstatistics-start. Requires installation through pip3.',
 	author='Gelu Oltean',
 	author_email='geluoltean8@gmail.com',
 	url='https://github.com/GeluOltean/microstatistics',

@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
-from diversities import dfProportion
+from .diversities import dfProportion
 from scipy.cluster import hierarchy as hc
 from scipy.spatial import distance as dist
 from sklearn.manifold import MDS
@@ -18,6 +18,7 @@ def graphIndex(lst, title: str, saveloc: str):
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
 	plt.yticks(yaxis)
 	plt.ylabel("Sample number")
+	plt.fill_betweenx(yaxis, holder, facecolor='black')
 
 	savename = "/" + title + ".svg"
 	plt.savefig(saveloc + savename)
@@ -32,9 +33,11 @@ def graphPercentages(frame, index, title: str, saveloc: str):
 	yaxis = [x+1 for x in range(len(holder.T))]
 	plt.title(title)
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+	plt.gca().set_ylim(1, len(yaxis))
 	plt.yticks(yaxis)
 	plt.plot(holder.iloc[index], yaxis, c="black")
 	plt.ylabel("Sample number")
+	plt.fill_betweenx(yaxis, holder.iloc[index], facecolor='black')
 
 	savename = "/" + title + ".svg"
 	plt.savefig(saveloc + savename)
@@ -54,6 +57,7 @@ def graphMorphogroups(frame, saveloc: str):
 	plt.figure(dpi = 200, figsize = (5,5))
 	yaxis = [x+1 for x in range(len(holder))]
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+	plt.gca().set_ylim(1, len(yaxis))
 
 	for i in range(0, len(holder.T)):
 		plt.subplot(1, 9, i+1)
@@ -61,7 +65,8 @@ def graphMorphogroups(frame, saveloc: str):
 		plt.xlabel(morphogroups[i])
 		plt.yticks(yaxis) #
 		plt.gca().set_ylim(1, len(yaxis))
-		
+		plt.fill_betweenx(yaxis, holder[i], facecolor='black')
+
 	plt.suptitle("Morphogroup abundances\n")
 
 	savename = "/Morphogroup abundances.svg"
