@@ -34,6 +34,7 @@ def graphPercentages(frame, index, title: str, saveloc: str):
 	plt.title(title)
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
 	plt.gca().set_ylim(1, len(yaxis))
+	plt.gca().set_xlim(0, 100)
 	plt.yticks(yaxis)
 	plt.plot(holder.iloc[index], yaxis, c="black")
 	plt.ylabel("Sample number")
@@ -65,6 +66,7 @@ def graphMorphogroups(frame, saveloc: str):
 		plt.xlabel(morphogroups[i])
 		plt.yticks(yaxis) #
 		plt.gca().set_ylim(1, len(yaxis))
+		plt.gca().set_xlim(0, 100)
 		plt.fill_betweenx(yaxis, holder[i], facecolor='black')
 
 	plt.suptitle("Morphogroup abundances\n")
