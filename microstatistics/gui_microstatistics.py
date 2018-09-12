@@ -34,54 +34,42 @@ class Ui_MainWindow(object):
         self.label = QtWidgets.QLabel(self.pageSpeciesCount)
         self.label.setGeometry(QtCore.QRect(10, 0, 111, 24))
         self.label.setObjectName("label")
-        self.label.setText("Univariate")
 
         self.checkboxFisher = QtWidgets.QCheckBox(self.pageSpeciesCount)
-        self.checkboxFisher.setGeometry(QtCore.QRect(10, 30, 261, 31))
+        self.checkboxFisher.setGeometry(QtCore.QRect(40, 20, 261, 31))
         self.checkboxFisher.setObjectName("checkboxFisher")
         self.checkboxFisher.setText("Fisher alpha diversity")
 
         self.label_2 = QtWidgets.QLabel(self.pageSpeciesCount)
         self.label_2.setGeometry(QtCore.QRect(680, 0, 111, 24))
         self.label_2.setObjectName("label_2")
-        self.label_2.setText("Multivariate")
 
         self.checkboxShannon = QtWidgets.QCheckBox(self.pageSpeciesCount)
-        self.checkboxShannon.setGeometry(QtCore.QRect(10, 70, 261, 31))
+        self.checkboxShannon.setGeometry(QtCore.QRect(40, 60, 261, 31))
         self.checkboxShannon.setObjectName("checkboxShannon")
         self.checkboxShannon.setText("Shannon-Wiener index")
 
-        self.checkboxHurlbert = QtWidgets.QCheckBox(self.pageSpeciesCount)
-        self.checkboxHurlbert.setGeometry(QtCore.QRect(10, 150, 261, 31))
-        self.checkboxHurlbert.setObjectName("checkboxHurlbert")
-        self.checkboxHurlbert.setText("Hurlbert diversity")
-
         self.checkboxSimpson = QtWidgets.QCheckBox(self.pageSpeciesCount)
-        self.checkboxSimpson.setGeometry(QtCore.QRect(10, 110, 261, 31))
+        self.checkboxSimpson.setGeometry(QtCore.QRect(40, 100, 261, 31))
         self.checkboxSimpson.setObjectName("checkboxSimpson")
         self.checkboxSimpson.setText("Simpson")
 
-        self.checkboxEquitability = QtWidgets.QCheckBox(self.pageSpeciesCount)
-        self.checkboxEquitability.setGeometry(QtCore.QRect(280, 30, 261, 31))
-        self.checkboxEquitability.setObjectName("checkboxEquitability")
-        self.checkboxEquitability.setText("Equitability")
+        self.checkboxHurlbert = QtWidgets.QCheckBox(self.pageSpeciesCount)
+        self.checkboxHurlbert.setGeometry(QtCore.QRect(40, 140, 261, 31))
+        self.checkboxHurlbert.setObjectName("checkboxHurlbert")
+        self.checkboxHurlbert.setText("Hurlbert diversity \n(select correction factor)")
 
         self.spinBoxHurlbert = QtWidgets.QSpinBox(self.pageSpeciesCount)
-        self.spinBoxHurlbert.setGeometry(QtCore.QRect(180, 150, 71, 33))
+        self.spinBoxHurlbert.setGeometry(QtCore.QRect(220, 140, 71, 33))
         self.spinBoxHurlbert.setMinimum(1)
         self.spinBoxHurlbert.setMaximum(99999)
         self.spinBoxHurlbert.setProperty("value", 100)
         self.spinBoxHurlbert.setObjectName("spinBoxHurlbert")
 
-        self.label_3 = QtWidgets.QLabel(self.pageSpeciesCount)
-        self.label_3.setGeometry(QtCore.QRect(30, 180, 211, 24))
-        self.label_3.setObjectName("label_3")
-        self.label_3.setText("(select correction factor)")
-
-        self.checkboxDendrogram = QtWidgets.QCheckBox(self.pageSpeciesCount)
-        self.checkboxDendrogram.setGeometry(QtCore.QRect(680, 30, 261, 31))
-        self.checkboxDendrogram.setObjectName("checkboxDendrogram")
-        self.checkboxDendrogram.setText("Dendrogram")
+        self.checkboxEquitability = QtWidgets.QCheckBox(self.pageSpeciesCount)
+        self.checkboxEquitability.setGeometry(QtCore.QRect(40, 180, 261, 31))
+        self.checkboxEquitability.setObjectName("checkboxEquitability")
+        self.checkboxEquitability.setText("Equitability")
 
         self.buttonOpen = QtWidgets.QToolButton(self.centralWidget)
         self.buttonOpen.setGeometry(QtCore.QRect(20, 30, 170, 51))
@@ -99,53 +87,47 @@ class Ui_MainWindow(object):
         self.saveLocation.setObjectName("saveLocation")
         self.saveLocation.setText("Choose a save location:")
 
-
-        self.checkboxNMDS = QtWidgets.QCheckBox(self.pageSpeciesCount)
-        self.checkboxNMDS.setGeometry(QtCore.QRect(680, 70, 261, 31))
-        self.checkboxNMDS.setObjectName("checkboxNMDS")
-        self.checkboxNMDS.setText("NMDS")
-
         self.checkboxRelAbundance = QtWidgets.QCheckBox(self.pageSpeciesCount)
-        self.checkboxRelAbundance.setGeometry(QtCore.QRect(280, 70, 261, 31))
+        self.checkboxRelAbundance.setGeometry(QtCore.QRect(300, 20, 261, 31))
         self.checkboxRelAbundance.setObjectName("checkboxRelAbundance")
         self.checkboxRelAbundance.setText("Relative Abundance for row:")
 
         self.spinBoxRelAbundance = QtWidgets.QSpinBox(self.pageSpeciesCount)
-        self.spinBoxRelAbundance.setGeometry(QtCore.QRect(530, 70, 71, 33))
+        self.spinBoxRelAbundance.setGeometry(QtCore.QRect(500, 20, 71, 33))
         self.spinBoxRelAbundance.setMinimum(1)
         self.spinBoxRelAbundance.setMaximum(9999)
-        self.spinBoxRelAbundance.setProperty("value", 8)
+        self.spinBoxRelAbundance.setProperty("value", 2)
         self.spinBoxRelAbundance.setObjectName("spinBoxRelAbundance")
 
-        self.toolBox.addItem(self.pageSpeciesCount, "Species Count")
+        self.toolBox.addItem(self.pageSpeciesCount, "Univariate - Species Count")
 
-        self.pagePBCount = QtWidgets.QWidget()
-        self.pagePBCount.setGeometry(QtCore.QRect(0, 0, 1147, 240))
-        self.pagePBCount.setObjectName("pagePBCount")
+        self.pageSpecificInput = QtWidgets.QWidget()
+        self.pageSpecificInput.setGeometry(QtCore.QRect(0, 0, 1147, 240))
+        self.pageSpecificInput.setObjectName("pageSpecificInput")
 
-        self.checkboxPlankBent = QtWidgets.QCheckBox(self.pagePBCount)
+        self.checkboxPlankBent = QtWidgets.QCheckBox(self.pageSpecificInput)
         self.checkboxPlankBent.setGeometry(QtCore.QRect(40, 20, 261, 31))
         self.checkboxPlankBent.setObjectName("checkboxPlankBent")
         self.checkboxPlankBent.setText("P/B ratio")
 
-        self.checkboxEpifaunalInfauntal = QtWidgets.QCheckBox(self.pagePBCount)
+        self.checkboxEpifaunalInfauntal = QtWidgets.QCheckBox(self.pageSpecificInput)
         self.checkboxEpifaunalInfauntal.setGeometry(QtCore.QRect(40, 60, 261, 31))
         self.checkboxEpifaunalInfauntal.setObjectName("checkboxEpifaunalInfauntal")
         self.checkboxEpifaunalInfauntal.setText("Epifaunal/Infaunal proportion")
 
-        self.checkboxEpifaunalInf3 = QtWidgets.QCheckBox(self.pagePBCount)
+        self.checkboxEpifaunalInf3 = QtWidgets.QCheckBox(self.pageSpecificInput)
         self.checkboxEpifaunalInf3.setGeometry(QtCore.QRect(280, 60, 281, 31))
         self.checkboxEpifaunalInf3.setObjectName("checkboxEpifaunalInf3")
         self.checkboxEpifaunalInf3.setText("Epifaunal/Infaunal (detailed) proportion")
 
-        self.checkboxMorphogroups = QtWidgets.QCheckBox(self.pagePBCount)
+        self.checkboxMorphogroups = QtWidgets.QCheckBox(self.pageSpecificInput)
         self.checkboxMorphogroups.setGeometry(QtCore.QRect(40, 100, 391, 31))
         self.checkboxMorphogroups.setObjectName("checkboxMorphogroups")
         self.checkboxMorphogroups.setText("Morphogroup abundances")
 
-        self.toolBox.addItem(self.pagePBCount, 'Specific input required')
+        self.toolBox.addItem(self.pageSpecificInput, 'Univariate - Specific input required')
 
-        self.checkboxBFOI = QtWidgets.QCheckBox(self.pagePBCount)
+        self.checkboxBFOI = QtWidgets.QCheckBox(self.pageSpecificInput)
         self.checkboxBFOI.setGeometry(QtCore.QRect(40, 140, 121, 31))
         self.checkboxBFOI.setObjectName("checkboxBFOI")
         self.checkboxBFOI.setText("BFOI")
@@ -155,28 +137,49 @@ class Ui_MainWindow(object):
         self.buttonCalculate.setObjectName("buttonCalculate")
         self.buttonCalculate.setText("Calculate indices")
 
-        self.spinBoxDimensions = QtWidgets.QSpinBox(self.pageSpeciesCount)
-        self.spinBoxDimensions.setGeometry(QtCore.QRect(830, 100, 71, 33))
+        # ///// multivariate page
+
+        self.pageMultivariate = QtWidgets.QWidget()
+        self.pageMultivariate.setGeometry(QtCore.QRect(0,0,1147,240))
+        self.pageMultivariate.setObjectName("pageMultivariate")
+        self.toolBox.addItem(self.pageMultivariate, "Multivariate")
+
+        self.checkboxDendrogram = QtWidgets.QCheckBox(self.pageMultivariate)
+        self.checkboxDendrogram.setGeometry(QtCore.QRect(40, 20, 261, 31))
+        self.checkboxDendrogram.setObjectName("checkboxDendrogram")
+        self.checkboxDendrogram.setText("Dendrogram")
+
+        self.checkboxNMDS = QtWidgets.QCheckBox(self.pageMultivariate)
+        self.checkboxNMDS.setGeometry(QtCore.QRect(40, 60, 261, 31))
+        self.checkboxNMDS.setObjectName("checkboxNMDS")
+        self.checkboxNMDS.setText("NMDS")
+
+        self.spinBoxDimensions = QtWidgets.QSpinBox(self.pageMultivariate)
+        self.spinBoxDimensions.setGeometry(QtCore.QRect(160, 96, 71, 33))
         self.spinBoxDimensions.setMinimum(1)
         self.spinBoxDimensions.setMaximum(9999)
         self.spinBoxDimensions.setProperty("value", 5)
         self.spinBoxDimensions.setObjectName("spinBoxDimensions")
 
-        self.spinBoxRuns = QtWidgets.QSpinBox(self.pageSpeciesCount)
-        self.spinBoxRuns.setGeometry(QtCore.QRect(830, 140, 111, 33))
+        self.spinBoxRuns = QtWidgets.QSpinBox(self.pageMultivariate)
+        self.spinBoxRuns.setGeometry(QtCore.QRect(160, 137, 71, 33))
         self.spinBoxRuns.setMinimum(1)
         self.spinBoxRuns.setMaximum(30000)
         self.spinBoxRuns.setProperty("value", 5)
         self.spinBoxRuns.setObjectName("spinBoxRuns")
 
-        self.label_5 = QtWidgets.QLabel(self.pageSpeciesCount)
-        self.label_5.setGeometry(QtCore.QRect(720, 100, 81, 24))
+        self.label_5 = QtWidgets.QLabel(self.pageMultivariate)
+        self.label_5.setGeometry(QtCore.QRect(80, 100, 101, 24))
         self.label_5.setObjectName("label_5")
-        self.label_6 = QtWidgets.QLabel(self.pageSpeciesCount)
-        self.label_6.setGeometry(QtCore.QRect(720, 140, 101, 41))
-        self.label_6.setObjectName("label_6")
         self.label_5.setText("Dimensions")
-        self.label_6.setText("Number of \nruns")
+
+        self.label_6 = QtWidgets.QLabel(self.pageMultivariate)
+        self.label_6.setGeometry(QtCore.QRect(80, 140, 101, 24))
+        self.label_6.setObjectName("label_6")
+        self.label_6.setText("Runs")
+        
+
+        # ///////////////
 
         self.label_4 = QtWidgets.QLabel(self.centralWidget)
         self.label_4.setGeometry(QtCore.QRect(20, 490, 911, 41))
