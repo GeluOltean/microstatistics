@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib as plt
 import math
-from scipy.misc import comb
+from scipy.special import comb
 # DEPRECATED
 
 # def simpson(pI):
@@ -137,7 +137,7 @@ from scipy.misc import comb
 def dfProportion(frame):
 	"""Calculates the proportion for each cell in a column. Requires a 
 	dataframe object as input. Returns a dataframe containing the results."""
-	holder = frame
+	holder = frame.copy()
 	for i in range(len(holder.T)):
 		holder[i] = holder[i].apply(lambda x: x if x == 0 else x / holder[i].sum())
 	return holder
@@ -171,7 +171,7 @@ def dfFisher(frame):
 	model for each column in a dataframe. Requires a dataframe object as input.
 	Returns a list containing the results. """
 	results = []
-	holder = frame
+	holder = frame.copy()
 	holder = holder.replace(0, np.nan)
 	for i in range (len(holder.T)):
 		summed = holder[i].sum()
@@ -189,7 +189,7 @@ def dfHurlbert(frame, correction=100):
 	to a chosen	size. Requires a dataframe object and a correction size as 
 	input. Returns a list containing the results."""
 	results = []
-	holder = frame
+	holder = frame.copy()
 	for i in range(len(holder.T)):
 		summed = holder[i].sum()
 		holder[i] = holder[i].apply(lambda x: x if x == 0 else 1 - (comb(summed - x, correction) / comb(summed, correction)))
@@ -202,7 +202,7 @@ def dfEquitability(frame):
 	Requires a dataframe object as input. Returns a list containing the 
 	results."""
 	results = []
-	holder = frame
+	holder = frame.copy()
 	holder = holder.replace(0, np.nan)
 	shannon = dfShannon(frame)
 	for i in range(len(holder.T)):
@@ -216,7 +216,7 @@ def dfBFOI(frame):
 	Kaminski. Requires a dataframe object as input. Returns a list 
 	containing the results."""
 	results = []
-	holder = frame	
+	holder = frame.copy()
 	for i in range(len(holder.T)):
 		oxic = holder[i][0]
 		disoxic = holder[i][1]

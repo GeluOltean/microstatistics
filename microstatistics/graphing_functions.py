@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
-from diversities import dfProportion
+from .diversities import dfProportion
 from scipy.cluster import hierarchy as hc
 from scipy.spatial import distance as dist
 from sklearn.manifold import MDS
