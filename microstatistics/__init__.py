@@ -39,7 +39,9 @@ class Application(QMainWindow, Ui_MainWindow):
 			sys.exit()
 
 		try:
-			self.columns = pd.read_excel(self.path, index_col=None, header=None, names=None, skiprows=1).drop([0], axis=1)
+			self.columns = pd.read_excel(self.path, index_col=None, header=None, names=None, skiprows=1)
+			self.speciesNames = self.columns.get([0])
+			self.columns = self.columns.drop([0], axis=1)
 			self.columns.columns = range(len(self.columns.T))
 
 		except ValueError:
@@ -55,8 +57,8 @@ class Application(QMainWindow, Ui_MainWindow):
 			fileName = QFileDialog.getOpenFileName(self, 'OpenFile')
 			fileName = str(fileName[0])
 			if '.xls' not in fileName:
-				raise ValueError
-		except:
+				raise ValueError("Not a spreadsheet.")
+		except(ValueError):
 			wrongFile = QMessageBox.warning(self, 'Error', 'Please select a spreadsheet.')
 			sys.exit()
 		return fileName
@@ -64,10 +66,11 @@ class Application(QMainWindow, Ui_MainWindow):
 	def file_reopen(self):
 		try:
 			self.path = self.file_open()
-			self.columns = pd.read_excel(self.path, index_col=None, header=None, names=None, skiprows=1).drop([0], axis=1)
+			self.columns = pd.read_excel(self.path, index_col=None, header=None, names=None, skiprows=1)
+			self.speciesNames = self.columns.get([0])
+			self.columns = self.columns.drop([0], axis=1)
 			self.columns.columns = range(len(self.columns.T))
-
-		except:
+		except(ValueError):
 			wrongFile = QMessageBox.warning(self, 'Error', 'Please select a spreadsheet.')
 
 	def file_save(self):
@@ -75,12 +78,11 @@ class Application(QMainWindow, Ui_MainWindow):
 		savePath = dialog.getExistingDirectory(None, "Select Folder")
 		self.saveLocation.setText(savePath)
 
-
 	def work(self):
 		try:
 			if self.saveLocation.text() == "Choose a save location:":
 				raise ValueError('Invalid save location.')
-		except:
+		except(ValueError):
 			saveError = QMessageBox.warning(self, "No save folder chosen",
 			"Please choose a folder to save to by clicking the correct button.")
 		else:
@@ -111,7 +113,16 @@ class Application(QMainWindow, Ui_MainWindow):
 
 			if self.checkboxRelAbundance.isChecked():
 				row = self.spinBoxRelAbundance.value()
-				graphPercentages(self.columns, row-2, f'Abundance of species on row {row}', savePath)
+				try:
+					if(row > self.columns.shape[0]+1 or row <= 1):
+						raise ValueError("The chosen row is invalid")
+					species = self.speciesNames.values[row-2]
+					graphPercentages(self.columns, row-2, f'Abundance of species {species}', savePath)
+				except(ValueError):
+					colError = QMessageBox.warning(self, 'Invalid row', 'An '
+					'invalid row was chosen when attempting to calculate the'
+					' relative abundance. Please make sure the row is in the '
+					'spreadsheet and try again.')
 
 			if self.checkboxPlankBent.isChecked():
 				try:
@@ -186,7 +197,7 @@ class Application(QMainWindow, Ui_MainWindow):
 			' contains empty cells, rows or columns which are taken into account.\n'
 			'\nPlease verify that all cells contain exclusively numerical data, and' 
 			'then copy the input data into a new .xlsx file\n', )
-			sys.exit()
+			# sys.exit()
 
 def run():
 	app = QtWidgets.QApplication(sys.argv)
