@@ -158,13 +158,13 @@ class Ui_MainWindow(object):
         self.spinBoxDimensions.setGeometry(QtCore.QRect(160, 96, 71, 33))
         self.spinBoxDimensions.setMinimum(1)
         self.spinBoxDimensions.setMaximum(9999)
-        self.spinBoxDimensions.setProperty("value", 5)
+        self.spinBoxDimensions.setProperty("value", 2)
         self.spinBoxDimensions.setObjectName("spinBoxDimensions")
 
         self.spinBoxRuns = QtWidgets.QSpinBox(self.pageMultivariate)
         self.spinBoxRuns.setGeometry(QtCore.QRect(160, 137, 71, 33))
         self.spinBoxRuns.setMinimum(1)
-        self.spinBoxRuns.setMaximum(30000)
+        # self.spinBoxRuns.setMaximum(30000)
         self.spinBoxRuns.setProperty("value", 5)
         self.spinBoxRuns.setObjectName("spinBoxRuns")
 
