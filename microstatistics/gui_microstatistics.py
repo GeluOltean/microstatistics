@@ -147,7 +147,7 @@ class Ui_MainWindow(object):
         self.checkboxDendrogram = QtWidgets.QCheckBox(self.pageMultivariate)
         self.checkboxDendrogram.setGeometry(QtCore.QRect(40, 20, 261, 31))
         self.checkboxDendrogram.setObjectName("checkboxDendrogram")
-        self.checkboxDendrogram.setText("Dendrogram")
+        self.checkboxDendrogram.setText("Hierarchical Clustering (Dendrogram)")
 
         self.checkboxNMDS = QtWidgets.QCheckBox(self.pageMultivariate)
         self.checkboxNMDS.setGeometry(QtCore.QRect(40, 60, 261, 31))

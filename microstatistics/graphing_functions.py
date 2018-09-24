@@ -120,9 +120,9 @@ def graphSampleDendrogram(frame, saveloc: str):
 	plt.figure(dpi=500)
 	linkage = hc.linkage(sampleDistance, method="average")
 	dendrog = hc.dendrogram(linkage, labels=labl)
-	plt.suptitle("Dendrogram for samples (Bray-Curtis)")
+	plt.suptitle("R-mode Dendrogram (Bray-Curtis)")
 
-	savename = "/Sample Dendrogram.svg"
+	savename = "/R-mode Dendrogram.svg"
 	plt.savefig(saveloc + savename)
 
 def graphSpeciesDendrogram(frame, saveloc: str):
@@ -131,9 +131,9 @@ def graphSpeciesDendrogram(frame, saveloc: str):
 	plt.figure(dpi=800)
 	linkage = hc.linkage(speciesDistance, method="average")
 	dendrog = hc.dendrogram(linkage, orientation="left", labels=labl)
-	plt.suptitle("Dendrogram for species (Bray-Curtis)")
+	plt.suptitle("Q-mode Dendrogram (Bray-Curtis)")
 
-	savename = "/Species Dendrogram.svg"
+	savename = "/Q-mode Dendrogram.svg"
 	plt.savefig(saveloc + savename)
 
 def graphNMDS(frame, dim, runs, saveloc: str):
