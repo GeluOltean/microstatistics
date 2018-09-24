@@ -10,17 +10,18 @@ def graphIndex(lst, title: str, saveloc: str):
 	"""Represents the list resulted from the calculation of an index. Requires
 	an iterable collection and a title as input."""
 	holder = lst
-	# holder = holder.replace(np.nan, 0)
-	plt.figure(dpi = 200, figsize=(5,15))
+	plt.figure(dpi = 200, figsize=(3,12))
 	yaxis = [x+1 for x in range(len(holder))]
 	plt.plot(holder, yaxis, c="black")
 	plt.title(title)
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+	plt.gca().set_ylim(1, len(yaxis))
+	plt.gca().set_xlim(0)
 	plt.yticks(yaxis)
 	plt.ylabel("Sample number")
 	plt.fill_betweenx(yaxis, holder, facecolor='black')
 
-	savename = "/" + title + ".svg"
+	savename = f"/{title}.svg"
 	plt.savefig(saveloc + savename)
 
 def graphPercentages(frame, index, title: str, saveloc: str):
@@ -29,7 +30,7 @@ def graphPercentages(frame, index, title: str, saveloc: str):
 	input. """
 	holder = dfProportion(frame) * 100 
 	holder = holder.replace(np.nan, 0)
-	plt.figure(dpi = 200, figsize=(5,15))
+	plt.figure(dpi = 200, figsize=(3,12))
 	yaxis = [x+1 for x in range(len(holder.T))]
 	plt.title(title)
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
@@ -86,7 +87,7 @@ def graphEpiInfDetailed(frame, saveloc: str):
 	infDeep = holder.iloc[2] + infShallow
 	infUndetermined = holder.iloc[3] + infDeep
 
-	plt.figure(dpi = 200, figsize = (5,15))
+	plt.figure(dpi = 200, figsize = (3,12))
 	yaxis = [x+1 for x in range(len(holder.T))]
 	plt.title("Detailed Epifaunal to Infaunal proportions")
 	plt.ylabel("Sample number")
