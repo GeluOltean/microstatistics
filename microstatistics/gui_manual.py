@@ -3,10 +3,18 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Manual(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(752, 661)
+        Dialog.resize(735, 476)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
+        Dialog.setSizePolicy(sizePolicy)
+        Dialog.setMinimumSize(QtCore.QSize(735, 476))
+        Dialog.setMaximumSize(QtCore.QSize(735, 476))
+        Dialog.setWindowTitle("microStatistics - Manual")
         self.textBrowser = QtWidgets.QTextBrowser(Dialog)
-        self.textBrowser.setGeometry(QtCore.QRect(0, 0, 751, 661))
-        self.textBrowser.setOverwriteMode(True)
+        self.textBrowser.setGeometry(QtCore.QRect(0, 0, 741, 481))
+        # self.textBrowser.setOverwriteMode(True)
         self.textBrowser.setTabStopWidth(0)
         self.textBrowser.setObjectName("textBrowser")
 
