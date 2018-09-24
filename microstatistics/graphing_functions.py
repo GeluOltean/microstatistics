@@ -40,7 +40,8 @@ def graphPercentages(frame, index, title: str, saveloc: str):
 	plt.ylabel("Sample number")
 	plt.fill_betweenx(yaxis, holder.iloc[index], facecolor='black')
 
-	savename = "/" + f"Abundance of species on row {index+2}" + ".svg"
+	# savename = "/" + f"Abundance of species on row {index+2}" + ".svg"
+	savename = f"/{title}.svg"
 	plt.savefig(saveloc + savename)
 
 def graphMorphogroups(frame, saveloc: str):
