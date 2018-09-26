@@ -3,3 +3,4 @@ microstatistics/__pycache__/*
 ./.git
 .vscode/*
 .directory
+./dist
