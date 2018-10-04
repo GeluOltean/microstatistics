@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
+from matplotlib.ticker import AutoMinorLocator
 from .diversities import dfProportion
 from scipy.cluster import hierarchy as hc
 from scipy.spatial import distance as dist
@@ -50,17 +51,15 @@ def graphMorphogroups(frame, saveloc: str):
 	distribution by morphogroup. Requires a dataframe object as input."""
 	holder = dfProportion(frame)
 
-	if(len(holder) > 9):
-		raise ValueError("The required formatting has not been respected. "
-		"Please consult the documentation as to the proper formatting required "
-		"for this index.")
 	holder = holder.transpose() * 100
 
 	morphogroups = ['M1', 'M2a', 'M2b', 'M2c', 'M3a', 'M3b', 'M3c', 'M4a', 'M4b']
-	plt.figure(dpi = 200, figsize = (5,5))
+	plt.figure(dpi = 300, figsize = (20, 8))
 	yaxis = [x+1 for x in range(len(holder))]
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
 	plt.gca().set_ylim(1, len(yaxis))
+	plt.subplots_adjust(wspace = 0.8)
+	plt.ylabel("Sample number")
 
 	for i in range(0, len(holder.T)):
 		plt.subplot(1, 9, i+1)
@@ -69,6 +68,7 @@ def graphMorphogroups(frame, saveloc: str):
 		plt.yticks(yaxis) #
 		plt.gca().set_ylim(1, len(yaxis))
 		plt.gca().set_xlim(0, 100)
+		plt.gca().xaxis.set_minor_locator(AutoMinorLocator(n=4))
 		plt.fill_betweenx(yaxis, holder[i], facecolor='black')
 
 	plt.suptitle("Morphogroup abundances\n")

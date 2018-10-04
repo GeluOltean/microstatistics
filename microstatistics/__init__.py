@@ -163,7 +163,7 @@ class Application(QMainWindow, Ui_MainWindow):
 			try:
 				if self.checkboxMorphogroups.isChecked():
 					try:
-						if(len(self.columns) > 9):
+						if(len(self.columns) != 9):
 							raise ValueError("The required formatting has not been respected. "
 							"Please consult the documentation.")
 						graphMorphogroups(self.columns, savePath)
