@@ -54,21 +54,32 @@ def graphMorphogroups(frame, saveloc: str):
 	holder = holder.transpose() * 100
 
 	morphogroups = ['M1', 'M2a', 'M2b', 'M2c', 'M3a', 'M3b', 'M3c', 'M4a', 'M4b']
-	plt.figure(dpi = 300, figsize = (20, 8))
+	plt.figure(dpi = 300, figsize = (50, 16))
 	yaxis = [x+1 for x in range(len(holder))]
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
 	plt.gca().set_ylim(1, len(yaxis))
 	plt.subplots_adjust(wspace = 0.8)
 	plt.ylabel("Sample number")
 
-	for i in range(0, len(holder.T)):
-		plt.subplot(1, 9, i+1)
+	first = plt.subplot(1, 9, 1)
+	plt.plot(holder[1], yaxis, c='black')
+	plt.xlabel(morphogroups[1])
+	plt.yticks(yaxis)
+	plt.gca().set_ylim(1, len(yaxis))
+	plt.gca().set_xlim(0)
+	plt.gca().xaxis.set_minor_locator(AutoMinorLocator(n=5))
+	plt.fill_betweenx(yaxis, holder[1], facecolor='black')
+
+	for i in range(2, len(holder.T)):
+		plt.subplot(1, 9, i+1, sharex=first)
 		plt.plot(holder[i], yaxis, c='black')
 		plt.xlabel(morphogroups[i])
 		plt.yticks(yaxis) #
 		plt.gca().set_ylim(1, len(yaxis))
-		plt.gca().set_xlim(0, 100)
-		plt.gca().xaxis.set_minor_locator(AutoMinorLocator(n=4))
+		plt.gca().set_xlim(0)
+		# plt.gca().set_xlim(0, max(holder[i].values)+10)
+		# plt.gca().set_xticks([x for x in range(0, max(holder[i].values), 10)])
+		plt.gca().xaxis.set_minor_locator(AutoMinorLocator(n=5))
 		plt.fill_betweenx(yaxis, holder[i], facecolor='black')
 
 	plt.suptitle("Morphogroup abundances\n")
