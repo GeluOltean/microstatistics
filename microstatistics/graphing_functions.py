@@ -2,10 +2,13 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib.ticker import AutoMinorLocator
-from .diversities import dfProportion
+from diversities import dfProportion
 from scipy.cluster import hierarchy as hc
 from scipy.spatial import distance as dist
+import os
 from sklearn.manifold import MDS
+
+plt.style.use("seaborn-whitegrid")
 
 def graphIndex(lst, title: str, saveloc: str):
 	"""Represents the list resulted from the calculation of an index. Requires
@@ -13,14 +16,14 @@ def graphIndex(lst, title: str, saveloc: str):
 	holder = lst
 	plt.figure(dpi = 200, figsize=(3,12))
 	yaxis = [x+1 for x in range(len(holder))]
-	plt.plot(holder, yaxis, c="black")
+	plt.plot(holder, yaxis)
 	plt.title(title)
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
 	plt.gca().set_ylim(1, len(yaxis))
-	plt.gca().set_xlim(0)
+	plt.gca().set_xlim(0, max(holder)*1.5)
 	plt.yticks(yaxis)
 	plt.ylabel("Sample number")
-	plt.fill_betweenx(yaxis, holder, facecolor='black')
+	plt.fill_betweenx(yaxis, holder)
 
 	savename = f"/{title}.svg"
 	plt.savefig(saveloc + savename)
@@ -38,9 +41,9 @@ def graphPercentages(frame, index, title: str, saveloc: str):
 	plt.gca().set_ylim(1, len(yaxis))
 	plt.gca().set_xlim(0, 100)
 	plt.yticks(yaxis)
-	plt.plot(holder.iloc[index], yaxis, c="black")
+	plt.plot(holder.iloc[index], yaxis)
 	plt.ylabel("Sample number")
-	plt.fill_betweenx(yaxis, holder.iloc[index], facecolor='black')
+	plt.fill_betweenx(yaxis, holder.iloc[index])
 
 	# savename = "/" + f"Abundance of species on row {index+2}" + ".svg"
 	savename = f"/{title}.svg"
@@ -49,43 +52,34 @@ def graphPercentages(frame, index, title: str, saveloc: str):
 def graphMorphogroups(frame, saveloc: str):
 	"""Represents the proportion of each morphogroup, displaying foram 
 	distribution by morphogroup. Requires a dataframe object as input."""
-	holder = dfProportion(frame)
-
+	holder = dfProportion(frame.copy())
 	holder = holder.transpose() * 100
+	morphogroups = ('M1', 'M2a', 'M2b', 'M2c', 'M3a', 'M3b', 'M3c', 'M4a', 'M4b')
 
-	morphogroups = ['M1', 'M2a', 'M2b', 'M2c', 'M3a', 'M3b', 'M3c', 'M4a', 'M4b']
-	plt.figure(dpi = 300, figsize = (50, 16))
-	yaxis = [x+1 for x in range(len(holder))]
-	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
-	plt.gca().set_ylim(1, len(yaxis))
-	plt.subplots_adjust(wspace = 0.8)
-	plt.ylabel("Sample number")
+	globalMax = max(holder.max().values)
+	yaxis = [x + 1 for x in range(len(holder[1]))]
 
-	first = plt.subplot(1, 9, 1)
-	plt.plot(holder[1], yaxis, c='black')
-	plt.xlabel(morphogroups[1])
-	plt.yticks(yaxis)
-	plt.gca().set_ylim(1, len(yaxis))
-	plt.gca().set_xlim(0)
-	plt.gca().xaxis.set_minor_locator(AutoMinorLocator(n=5))
-	plt.fill_betweenx(yaxis, holder[1], facecolor='black')
+	if (not os.path.isdir(saveloc + "/graphs")):
+		os.mkdir(saveloc + "/graphs")
+	saveLocationMorphs = saveloc + "/graphs"
 
-	for i in range(2, len(holder.T)):
-		plt.subplot(1, 9, i+1, sharex=first)
-		plt.plot(holder[i], yaxis, c='black')
-		plt.xlabel(morphogroups[i])
-		plt.yticks(yaxis) #
-		plt.gca().set_ylim(1, len(yaxis))
+	morphoDict = {}
+	for i in range(len(morphogroups)):
+		morphoDict[morphogroups[i]] = holder[i]
+	
+	for k in morphoDict:
+		localMax = ((max(morphoDict[k]) * 100) / globalMax) / 100
+		plt.figure(dpi=300, figsize=[localMax * 3, 12])
+		plt.plot(morphoDict[k], yaxis)
+		plt.title(k)
 		plt.gca().set_xlim(0)
-		# plt.gca().set_xlim(0, max(holder[i].values)+10)
-		# plt.gca().set_xticks([x for x in range(0, max(holder[i].values), 10)])
+		plt.gca().set_ylim(1, len(yaxis))
 		plt.gca().xaxis.set_minor_locator(AutoMinorLocator(n=5))
-		plt.fill_betweenx(yaxis, holder[i], facecolor='black')
-
-	plt.suptitle("Morphogroup abundances\n")
-
-	savename = "/Morphogroup abundances.svg"
-	plt.savefig(saveloc + savename)
+		plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))    
+		plt.yticks(yaxis)
+		plt.fill_betweenx(yaxis, morphoDict[k])
+		plt.savefig(saveLocationMorphs+f"/{k}.svg")
+		plt.close(k)
 
 def graphEpiInfDetailed(frame, saveloc: str):
 	"""Represents the epifaunal to infaunal proportions by displaying foram
