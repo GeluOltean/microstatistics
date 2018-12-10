@@ -10,7 +10,7 @@ from sklearn.manifold import MDS
 
 plt.style.use("seaborn-whitegrid")
 
-def graphIndex(lst, title: str, saveloc: str):
+def graphIndex(lst, title: str, saveloc: str, labels: list):
 	"""Represents the list resulted from the calculation of an index. Requires
 	an iterable collection and a title as input."""
 	holder = lst
@@ -21,14 +21,14 @@ def graphIndex(lst, title: str, saveloc: str):
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
 	plt.gca().set_ylim(1, len(yaxis))
 	plt.gca().set_xlim(0, max(holder)*1.5)
-	plt.yticks(yaxis)
+	plt.yticks(yaxis, labels)
 	plt.ylabel("Sample number")
 	plt.fill_betweenx(yaxis, holder)
 
 	savename = f"/{title}.svg"
 	plt.savefig(saveloc + savename)
 
-def graphPercentages(frame, index, title: str, saveloc: str):
+def graphPercentages(frame, index, title: str, saveloc: str, labels: list):
 	"""Represents a row from a dataframe (a chosen species) by their proportion
 	in a sample (column). Requires a dataframe object, an index, and a title as
 	input. """
@@ -40,7 +40,7 @@ def graphPercentages(frame, index, title: str, saveloc: str):
 	plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
 	plt.gca().set_ylim(1, len(yaxis))
 	plt.gca().set_xlim(0, 100)
-	plt.yticks(yaxis)
+	plt.yticks(yaxis, labels)
 	plt.plot(holder.iloc[index], yaxis)
 	plt.ylabel("Sample number")
 	plt.fill_betweenx(yaxis, holder.iloc[index])
@@ -49,7 +49,7 @@ def graphPercentages(frame, index, title: str, saveloc: str):
 	savename = f"/{title}.svg"
 	plt.savefig(saveloc + savename)
 
-def graphMorphogroups(frame, saveloc: str):
+def graphMorphogroups(frame, saveloc: str, labels: list):
 	"""Represents the proportion of each morphogroup, displaying foram 
 	distribution by morphogroup. Requires a dataframe object as input."""
 	holder = dfProportion(frame.copy())
@@ -76,7 +76,7 @@ def graphMorphogroups(frame, saveloc: str):
 		plt.gca().set_ylim(1, len(yaxis))
 		plt.gca().xaxis.set_minor_locator(AutoMinorLocator(n=5))
 		plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))    
-		plt.yticks(yaxis)
+		plt.yticks(yaxis, labels)
 		plt.fill_betweenx(yaxis, morphoDict[k])
 		plt.savefig(saveLocationMorphs+f"/{k}.svg")
 		plt.close(k)
@@ -121,7 +121,7 @@ def graphEpiInfDetailed(frame, saveloc: str):
 
 ##### MULTIVARIATE INDICES #####
 
-def graphSampleDendrogram(frame, saveloc: str):
+def graphSampleDendrogram(frame, saveloc: str, labels: list):
 	labl = list(range(1, len(frame.T)+1))
 	sampleDistance = dist.pdist(frame.T, metric="braycurtis")
 	plt.figure(dpi=500)
@@ -143,8 +143,8 @@ def graphSpeciesDendrogram(frame, saveloc: str):
 	savename = "/Q-mode Dendrogram.svg"
 	plt.savefig(saveloc + savename)
 
-def graphNMDS(frame, dim, runs, saveloc: str):
-	labl = list(range(1, len(frame.T)+1))
+def graphNMDS(frame, dim, runs, saveloc: str, labels: list):
+	# labl = list(range(1, len(frame.T)+1))
 	sampleDistance = dist.pdist(frame.T, metric="braycurtis")
 	squareDist = dist.squareform(sampleDistance)
 
@@ -156,8 +156,8 @@ def graphNMDS(frame, dim, runs, saveloc: str):
 	pos1 = pos[:,1].tolist()
 	fig, ax = plt.subplots()
 	ax.scatter(pos0, pos1)
-	for i, x in enumerate(labl):
-		ax.annotate(x + 1, (pos0[i], pos1[i]))
+	for i, x in enumerate(labels):
+		ax.annotate(x, (pos0[i], pos1[i]))
 	fig.suptitle("nMDS (Bray-Curtis)")
 	ax.set_title(f"Stress = {str(stress)}")
 

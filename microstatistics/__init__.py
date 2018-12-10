@@ -9,6 +9,7 @@ from .diversities import *
 from .graphing_functions import *
 import pandas as pd
 import sys
+import traceback
 
 class Application(QMainWindow, Ui_MainWindow):
 	def __init__(self):
@@ -39,9 +40,13 @@ class Application(QMainWindow, Ui_MainWindow):
 			sys.exit()
 
 		try:
-			self.columns = pd.read_excel(self.path, index_col=None, header=None, names=None, skiprows=1)
-			self.speciesNames = self.columns.get([0])
+			self.columns = pd.read_excel(self.path, index_col=None, header=None, names=None)
+			self.speciesNames = self.columns.get([0]).values.tolist()
+			self.speciesNames.pop(0)
+			self.sampleLabels = self.columns.loc[0]
+			self.sampleLabels.pop(0)
 			self.columns = self.columns.drop([0], axis=1)
+			self.columns = self.columns.drop([0], axis=0)
 			self.columns.columns = range(len(self.columns.T))
 
 		except ValueError:
@@ -66,9 +71,13 @@ class Application(QMainWindow, Ui_MainWindow):
 	def file_reopen(self):
 		try:
 			self.path = self.file_open()
-			self.columns = pd.read_excel(self.path, index_col=None, header=None, names=None, skiprows=1)
-			self.speciesNames = self.columns.get([0])
+			self.columns = pd.read_excel(self.path, index_col=None, header=None, names=None)
+			self.speciesNames = self.columns.get([0]).values.tolist()
+			self.speciesNames.pop(0)
+			self.sampleLabels = self.columns.loc[0]
+			self.sampleLabels.pop(0)
 			self.columns = self.columns.drop([0], axis=1)
+			self.columns = self.columns.drop([0], axis=0)
 			self.columns.columns = range(len(self.columns.T))
 		except(ValueError):
 			wrongFile = QMessageBox.warning(self, 'Error', 'Please select a spreadsheet.')
@@ -93,31 +102,31 @@ class Application(QMainWindow, Ui_MainWindow):
 			savePath = self.saveLocation.text()
 
 			if self.checkboxFisher.isChecked():
-				graphIndex(dfFisher(self.columns), 'Fisher diversity', savePath)
+				graphIndex(dfFisher(self.columns), 'Fisher diversity', savePath, self.sampleLabels)
 
 			if self.checkboxSimpson.isChecked():
-				graphIndex(dfSimpson(self.columns), 'Simpson diversity', savePath)
+				graphIndex(dfSimpson(self.columns), 'Simpson diversity', savePath, self.sampleLabels)
 
 			if self.checkboxShannon.isChecked():
-				graphIndex(dfShannon(self.columns), 'Shannon diversity', savePath)
+				graphIndex(dfShannon(self.columns), 'Shannon diversity', savePath, self.sampleLabels)
 
 			if self.checkboxEquitability.isChecked():
-				graphIndex(dfEquitability(self.columns), 'Equitability', savePath)
+				graphIndex(dfEquitability(self.columns), 'Equitability', savePath, self.sampleLabels)
 
 			if self.checkboxHurlbert.isChecked():
 				corr = self.spinBoxHurlbert.value()
-				graphIndex(dfHurlbert(self.columns, corr), f'Hurlbert diversity, size {corr}', savePath)
+				graphIndex(dfHurlbert(self.columns, corr), f'Hurlbert diversity, size {corr}', savePath, self.sampleLabels)
 
 			if self.checkboxBFOI.isChecked():
-				graphIndex(dfBFOI(self.columns), 'BFOI', savePath)
+				graphIndex(dfBFOI(self.columns), 'BFOI', savePath, self.sampleLabels)
 
 			if self.checkboxRelAbundance.isChecked():
 				row = self.spinBoxRelAbundance.value()
 				try:
 					if(row > self.columns.shape[0]+1 or row <= 1):
 						raise ValueError("The chosen row is invalid")
-					species = self.speciesNames.values[row-2]
-					graphPercentages(self.columns, row-2, f'Abundance of species {species}', savePath)
+					species = self.speciesNames[row-2]
+					graphPercentages(self.columns, row-2, f'Abundance of species {species}', savePath, self.sampleLabels)
 				except(ValueError):
 					colError = QMessageBox.warning(self, 'Invalid row', 'An '
 					'invalid row was chosen when attempting to calculate the'
@@ -129,7 +138,7 @@ class Application(QMainWindow, Ui_MainWindow):
 					if(len(self.columns) != 2): # 2 rows required
 						raise ValueError("The required formatting has not been"
 						" respected. Please consult the documentation.")
-					graphPercentages(self.columns, 0, 'P-B ratio', savePath)
+					graphPercentages(self.columns, 0, 'P-B ratio', savePath, self.sampleLabels)
 				except(ValueError):
 					colError = QMessageBox.warning(self, 'Input error', 'The requir'
 					'ed formatting has not been respected. Please consult the'
@@ -141,7 +150,7 @@ class Application(QMainWindow, Ui_MainWindow):
 					if(len(self.columns) != 2): # 2 rows required
 						raise ValueError("The required formatting has not been"
 						" respected. Please consult the documentation.")
-					graphPercentages(self.columns, 0, 'Epifaunal-Infaunal ratio', savePath)
+					graphPercentages(self.columns, 0, 'Epifaunal-Infaunal ratio', savePath, self.sampleLabels)
 				except(ValueError):
 					colError = QMessageBox.warning(self, 'Input error', 'The requir'
 					'ed formatting has not been respected. Please consult the'
@@ -166,7 +175,7 @@ class Application(QMainWindow, Ui_MainWindow):
 						if(len(self.columns) != 9):
 							raise ValueError("The required formatting has not been respected. "
 							"Please consult the documentation.")
-						graphMorphogroups(self.columns, savePath)
+						graphMorphogroups(self.columns, savePath, self.sampleLabels)
 					except(ValueError):
 						colError = QMessageBox.warning(self, 'Input error', 'The requir'
 						'ed formatting has not been respected. Please consult the'
@@ -180,19 +189,20 @@ class Application(QMainWindow, Ui_MainWindow):
 
 
 			if self.checkboxDendrogram.isChecked():
-				graphSampleDendrogram(self.columns, savePath)
+				graphSampleDendrogram(self.columns, savePath, self.sampleLabels)
 				graphSpeciesDendrogram(self.columns, savePath)
 
 			if self.checkboxNMDS.isChecked():
 				dimens = self.spinBoxDimensions.value()
 				runs = self.spinBoxRuns.value()
-				graphNMDS(self.columns, dimens, runs, savePath)
+				graphNMDS(self.columns, dimens, runs, savePath, self.sampleLabels)
 
 			finished = QMessageBox.information (self, 'Finished',
 			'The selected operations have been performed. The plots have been'
 			'saved in '+ self.saveLocation.text())
 
 		except (TypeError, ValueError):
+			traceback.print_exc()
 			colError = QMessageBox.warning(self, 'Input error', 'The spreadsheet'
 			' contains empty cells, rows or columns which are taken into account.\n'
 			'\nPlease verify that all cells contain exclusively numerical data, and' 

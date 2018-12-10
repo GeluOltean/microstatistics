@@ -164,7 +164,7 @@ class Ui_MainWindow(object):
         self.spinBoxRuns = QtWidgets.QSpinBox(self.pageMultivariate)
         self.spinBoxRuns.setGeometry(QtCore.QRect(160, 137, 71, 33))
         self.spinBoxRuns.setMinimum(1)
-        # self.spinBoxRuns.setMaximum(30000)
+        self.spinBoxRuns.setMaximum(30000000)
         self.spinBoxRuns.setProperty("value", 5)
         self.spinBoxRuns.setObjectName("spinBoxRuns")
 
@@ -198,24 +198,3 @@ class Ui_MainWindow(object):
         self.toolAbout = QtWidgets.QAction('About', self)
         self.mainToolBar.addAction(self.toolAbout)
         self.mainToolBar.addAction(self.toolManual)
-
-
-
-        # self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        # self.menuBar.setGeometry(QtCore.QRect(0, 0, 1197, 30))
-        # self.menuBar.setObjectName("menuBar")
-
-        # self.menuManual = QtWidgets.QMenu(self.menuBar)
-        # self.menuManual.setObjectName("menuManual")
-        # self.menuManual.setTitle("Manual")
-
-
-        # self.menuAbout = QtWidgets.QMenu(self.menuBar)
-        # self.menuAbout.setObjectName("menuAbout")
-        # self.menuAbout.setTitle("About")
-
-
-        # MainWindow.setMenuBar(self.menuBar)
-   
-        # self.menuBar.addAction(self.menuManual.menuAction())
-        # self.menuBar.addAction(self.menuAbout.menuAction())
