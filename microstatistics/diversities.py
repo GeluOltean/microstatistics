@@ -1,10 +1,11 @@
 import pandas as pd
+from pandas import DataFrame
 import numpy as np
 import matplotlib as plt
 import math
 from scipy.special import comb
 
-def dfProportion(frame):
+def dfProportion(frame: DataFrame):
 	"""Calculates the proportion for each cell in a column. Requires a
 	dataframe object as input. Returns a dataframe containing the results."""
 	holder = frame.copy()
@@ -12,7 +13,7 @@ def dfProportion(frame):
 		holder[i] = holder[i].apply(lambda x: x if x == 0 else x / holder[i].sum())
 	return holder
 
-def dfShannon(frame):
+def dfShannon(frame: DataFrame):
 	"""Calculates the Shannon-Wiener entropy for each column in a dataframe.
 	Requires a	dataframe object as input. Returns a list containing the
 	results."""
@@ -24,7 +25,7 @@ def dfShannon(frame):
 		results.append(holder[i].sum())
 	return results
 
-def dfSimpson(frame):
+def dfSimpson(frame: DataFrame):
 	"""Calculates the Simpson diversity index for each column in a dataframe.
 	Requires a dataframe object as input. Returns a list containing the
 	results."""
@@ -36,7 +37,7 @@ def dfSimpson(frame):
 		results.append(1 - holder[i].sum())
 	return results
 
-def dfFisher(frame):
+def dfFisher(frame: DataFrame):
 	"""Calculates the Fisher alpha diversity assuming a logarithmic abundance
 	model for each column in a dataframe. Requires a dataframe object as input.
 	Returns a list containing the results. """
@@ -54,7 +55,7 @@ def dfFisher(frame):
 		results.append(fisher)
 	return results
 
-def dfHurlbert(frame, correction=100):
+def dfHurlbert(frame: DataFrame, correction=100):
 	"""Calculates the Hurlbert diversity by reducing the columns of a dataframe
 	to a chosen	size. Requires a dataframe object and a correction size as
 	input. Returns a list containing the results."""
@@ -67,7 +68,7 @@ def dfHurlbert(frame, correction=100):
 		results.append(holder[i].sum())
 	return results
 
-def dfEquitability(frame):
+def dfEquitability(frame: DataFrame):
 	"""Calculates Pielou's equitability for each column in a chosen dataframe.
 	Requires a dataframe object as input. Returns a list containing the
 	results."""
@@ -81,7 +82,7 @@ def dfEquitability(frame):
 		results.append(equit)
 	return results
 
-def dfBFOI(frame):
+def dfBFOI(frame: DataFrame):
 	"""Calculates the Benthic Foraminifera Oxigenation Index according to
 	Kaminski. Requires a dataframe object as input. Returns a list
 	containing the results."""
