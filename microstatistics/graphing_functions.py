@@ -32,7 +32,7 @@ def graphPercentages(frame, index, title: str, saveloc: str, labels: list):
 	"""Represents a row from a dataframe (a chosen species) by their proportion
 	in a sample (column). Requires a dataframe object, an index, and a title as
 	input. """
-	holder = dfProportion(frame) * 100 
+	holder = dfProportion(frame) * 100
 	holder = holder.replace(np.nan, 0)
 	plt.figure(dpi = 200, figsize=(3,12))
 	yaxis = [x+1 for x in range(len(holder.T))]
@@ -50,11 +50,12 @@ def graphPercentages(frame, index, title: str, saveloc: str, labels: list):
 	plt.savefig(saveloc + savename)
 
 def graphMorphogroups(frame, saveloc: str, labels: list):
-	"""Represents the proportion of each morphogroup, displaying foram 
+	"""Represents the proportion of each morphogroup, displaying foram
 	distribution by morphogroup. Requires a dataframe object as input."""
 	holder = dfProportion(frame.copy())
 	holder = holder.transpose() * 100
-	morphogroups = ('M1', 'M2a', 'M2b', 'M2c', 'M3a', 'M3b', 'M3c', 'M4a', 'M4b')
+	morphogroups = ('M1', 'M2a', 'M2b', 'M2c', 'M3a', 'M3b', 'M3c', 'M4a',
+	'M4b')
 
 	globalMax = max(holder.max().values)
 	yaxis = [x + 1 for x in range(len(holder[1]))]
@@ -65,8 +66,8 @@ def graphMorphogroups(frame, saveloc: str, labels: list):
 
 	morphoDict = {}
 	for i in range(len(morphogroups)):
-		morphoDict[morphogroups[i]] = holder[i]
-	
+		morphoDict[morphogroups[i]] = holder.T.values[i]
+
 	for k in morphoDict:
 		localMax = ((max(morphoDict[k]) * 100) / globalMax) / 100
 		plt.figure(dpi=300, figsize=[localMax * 3, 12])
@@ -75,7 +76,7 @@ def graphMorphogroups(frame, saveloc: str, labels: list):
 		plt.gca().set_xlim(0)
 		plt.gca().set_ylim(1, len(yaxis))
 		plt.gca().xaxis.set_minor_locator(AutoMinorLocator(n=5))
-		plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))    
+		plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
 		plt.yticks(yaxis, labels)
 		plt.fill_betweenx(yaxis, morphoDict[k])
 		plt.savefig(saveLocationMorphs+f"/{k}.svg")
@@ -87,7 +88,7 @@ def graphEpiInfDetailed(frame, saveloc: str):
 	as input. """
 	holder = dfProportion(frame) * 100
 	# holder.iloc[0] gets the first row
-	epifaunal = holder.iloc[0] 
+	epifaunal = holder.iloc[0]
 	infShallow = holder.iloc[1] + epifaunal
 	infDeep = holder.iloc[2] + infShallow
 	infUndetermined = holder.iloc[3] + infDeep
@@ -115,7 +116,7 @@ def graphEpiInfDetailed(frame, saveloc: str):
 
 	plt.subplot(111).legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
           fancybox=True, shadow=True, ncol=5, borderaxespad=2)
-	
+
 	savename = "/Detailed Epi-Infaunal.svg"
 	plt.savefig(saveloc + savename)
 
@@ -148,7 +149,8 @@ def graphNMDS(frame, dim, runs, saveloc: str, labels: list):
 	sampleDistance = dist.pdist(frame.T, metric="braycurtis")
 	squareDist = dist.squareform(sampleDistance)
 
-	nmds = MDS(n_components=dim, metric=False, dissimilarity="precomputed", max_iter=runs, n_init=30)
+	nmds = MDS(n_components=dim, metric=False, dissimilarity="precomputed",
+	max_iter=runs, n_init=30)
 	pos = nmds.fit(squareDist).embedding_
 	stress = nmds.fit(squareDist).stress_
 
