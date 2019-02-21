@@ -4,3 +4,4 @@ microstatistics/__pycache__/*
 .vscode/*
 .directory
 ./dist
+microstatistics.egg-info
