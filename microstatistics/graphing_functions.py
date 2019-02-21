@@ -1,14 +1,18 @@
 import numpy as np
+import os
+from math import ceil
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib.ticker import AutoMinorLocator
 from .diversities import dfProportion
 from scipy.cluster import hierarchy as hc
 from scipy.spatial import distance as dist
-import os
 from sklearn.manifold import MDS
 
 plt.style.use("seaborn-whitegrid")
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+plt.rcParams['svg.fonttype'] = 'none'
 
 def graphIndex(lst, title: str, saveloc: str, labels: list):
 	"""Represents the list resulted from the calculation of an index. Requires
