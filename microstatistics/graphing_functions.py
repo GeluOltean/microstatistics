@@ -73,11 +73,18 @@ def graphMorphogroups(frame, saveloc: str, labels: list):
 		morphoDict[morphogroups[i]] = holder.T.values[i]
 
 	for k in morphoDict:
-		localMax = ((max(morphoDict[k]) * 100) / globalMax) / 100
+		# ensure the same scale
+		localSize = 5 if ceil(max(morphoDict[k])) < 5 else max(morphoDict[k])
+		localMax = ((localSize * 100) / globalMax) / 100
+
 		plt.figure(dpi=300, figsize=[localMax * 3, 12])
 		plt.plot(morphoDict[k], yaxis)
 		plt.title(k)
 		plt.gca().set_xlim(0)
+		if (ceil(max(morphoDict[k])) < 5):
+			plt.gca().set_xlim(0, 5)
+		else:
+			plt.gca().set_xlim(0)
 		plt.gca().set_ylim(1, len(yaxis))
 		plt.gca().xaxis.set_minor_locator(AutoMinorLocator(n=5))
 		plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
