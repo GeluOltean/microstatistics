@@ -60,9 +60,9 @@ def graphMorphogroups(frame, saveloc: str, labels: list):
 	globalMax = max(holder.max().values)
 	yaxis = [x + 1 for x in range(len(holder[1]))]
 
-	if (not os.path.isdir(saveloc + "/graphs")):
-		os.mkdir(saveloc + "/graphs")
-	saveLocationMorphs = saveloc + "/graphs"
+	if (not os.path.isdir(saveloc + "/morphogroups")):
+		os.mkdir(saveloc + "/morphogroups")
+	saveLocationMorphs = saveloc + "/morphogroups"
 
 	morphoDict = {}
 	for i in range(len(morphogroups)):
