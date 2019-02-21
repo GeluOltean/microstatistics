@@ -5,10 +5,12 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1197, 633)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
         MainWindow.setMinimumSize(QtCore.QSize(1197, 633))
         MainWindow.setMaximumSize(QtCore.QSize(1197, 633))
@@ -57,7 +59,8 @@ class Ui_MainWindow(object):
         self.checkboxHurlbert = QtWidgets.QCheckBox(self.pageSpeciesCount)
         self.checkboxHurlbert.setGeometry(QtCore.QRect(40, 140, 261, 31))
         self.checkboxHurlbert.setObjectName("checkboxHurlbert")
-        self.checkboxHurlbert.setText("Hurlbert diversity \n(select correction factor)")
+        self.checkboxHurlbert.setText(
+            "Hurlbert diversity \n(select correction factor)")
 
         self.spinBoxHurlbert = QtWidgets.QSpinBox(self.pageSpeciesCount)
         self.spinBoxHurlbert.setGeometry(QtCore.QRect(220, 140, 71, 33))
@@ -99,7 +102,8 @@ class Ui_MainWindow(object):
         self.spinBoxRelAbundance.setProperty("value", 2)
         self.spinBoxRelAbundance.setObjectName("spinBoxRelAbundance")
 
-        self.toolBox.addItem(self.pageSpeciesCount, "Univariate - Species Count")
+        self.toolBox.addItem(self.pageSpeciesCount, "Univariate - "
+                             + "Species Count")
 
         self.pageSpecificInput = QtWidgets.QWidget()
         self.pageSpecificInput.setGeometry(QtCore.QRect(0, 0, 1147, 240))
@@ -110,22 +114,27 @@ class Ui_MainWindow(object):
         self.checkboxPlankBent.setObjectName("checkboxPlankBent")
         self.checkboxPlankBent.setText("P/B ratio")
 
-        self.checkboxEpifaunalInfauntal = QtWidgets.QCheckBox(self.pageSpecificInput)
-        self.checkboxEpifaunalInfauntal.setGeometry(QtCore.QRect(40, 60, 261, 31))
-        self.checkboxEpifaunalInfauntal.setObjectName("checkboxEpifaunalInfauntal")
+        self.checkboxEpifaunalInfauntal = QtWidgets.QCheckBox(
+            self.pageSpecificInput)
+        self.checkboxEpifaunalInfauntal.setGeometry(QtCore.QRect(40, 60, 261,
+                                                                 31))
+        self.checkboxEpifaunalInfauntal.setObjectName(
+            "checkboxEpifaunalInfauntal")
         self.checkboxEpifaunalInfauntal.setText("Epifaunal/Infaunal proportion")
 
         self.checkboxEpifaunalInf3 = QtWidgets.QCheckBox(self.pageSpecificInput)
         self.checkboxEpifaunalInf3.setGeometry(QtCore.QRect(280, 60, 281, 31))
         self.checkboxEpifaunalInf3.setObjectName("checkboxEpifaunalInf3")
-        self.checkboxEpifaunalInf3.setText("Epifaunal/Infaunal (detailed) proportion")
+        self.checkboxEpifaunalInf3.setText("Epifaunal/Infaunal (detailed)" +
+                                           " proportion")
 
         self.checkboxMorphogroups = QtWidgets.QCheckBox(self.pageSpecificInput)
         self.checkboxMorphogroups.setGeometry(QtCore.QRect(40, 100, 391, 31))
         self.checkboxMorphogroups.setObjectName("checkboxMorphogroups")
         self.checkboxMorphogroups.setText("Morphogroup abundances")
 
-        self.toolBox.addItem(self.pageSpecificInput, 'Univariate - Specific input required')
+        self.toolBox.addItem(self.pageSpecificInput, "Univariate - Specific " +
+                             "input required")
 
         self.checkboxBFOI = QtWidgets.QCheckBox(self.pageSpecificInput)
         self.checkboxBFOI.setGeometry(QtCore.QRect(40, 140, 121, 31))
@@ -177,14 +186,15 @@ class Ui_MainWindow(object):
         self.label_6.setGeometry(QtCore.QRect(80, 140, 101, 24))
         self.label_6.setObjectName("label_6")
         self.label_6.setText("Runs")
-        
+
 
         # ///////////////
 
         self.label_4 = QtWidgets.QLabel(self.centralWidget)
         self.label_4.setGeometry(QtCore.QRect(20, 490, 911, 41))
         self.label_4.setObjectName("label_4")
-        self.label_4.setText("Thank you for using our software! We would appreciate a citation to the following paper:")
+        self.label_4.setText("Thank you for using our software! We would " +
+                             "appreciate a citation to the following paper:")
 
         MainWindow.setCentralWidget(self.centralWidget)
         self.toolBox.setCurrentIndex(0)
