@@ -5,11 +5,11 @@ from PyQt5.QtWidgets import (QAction, QMessageBox, QCalendarWidget, QFontDialog,
 QColorDialog, QTextEdit, QFileDialog, QCheckBox, QProgressBar, QComboBox,
 QLabel, QStyleFactory, QLineEdit, QInputDialog, QApplication, QWidget,
 QMainWindow, QPushButton)
-from gui_microstatistics import Ui_MainWindow
-from gui_manual import Ui_Manual
-from gui_licence import Ui_Licence
-from diversities import *
-from graphing_functions import *
+from .gui_microstatistics import Ui_MainWindow
+from .gui_manual import Ui_Manual
+from .gui_licence import Ui_Licence
+from .diversities import *
+from .graphing_functions import *
 import pandas as pd
 import sys
 import traceback

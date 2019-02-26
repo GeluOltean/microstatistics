@@ -74,7 +74,7 @@ def graphMorphogroups(frame, saveloc: str, labels: list):
 
 	for k in morphoDict:
 		# ensure the same scale
-		localSize = 5 if ceil(max(morphoDict[k])) < 5 else max(morphoDict[k])
+		localSize = 5 if max(morphoDict[k]) < 5 else max(morphoDict[k])
 		localMax = ((localSize * 100) / globalMax) / 100
 
 		plt.figure(dpi=300, figsize=[localMax * 3, 12])
