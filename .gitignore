@@ -1,7 +1,10 @@
-__pycache__
-microstatistics/__pycache__/*
-./.git
+microstatistics/__pycache__
+.git
 .vscode/*
 .directory
-./dist
-microstatistics.egg-info
+microstatistics.egg-info/
+*.pyc
+*.egg
+*.egg-info
+dist
+build
