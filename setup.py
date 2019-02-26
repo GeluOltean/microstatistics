@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
 	name='microstatistics',
 	packages=find_packages(),
-	version='0.3.6',
+	version='0.5.5',
 	description='A package for micropalaeontological statisics with a Qt5 ' +
 	'gui. Launched with microstatistics-start. Requires installation through '+
 	'pip3.',
@@ -21,7 +21,7 @@ setup(
 		'Intended Audience :: Science/Research',
 		'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
 		'Programming Language :: Python :: 3.6',],
-	# script=['microstatistics/microstatistics-start'],
+	script=['microstatistics/microstatistics-start'],
 	entry_points={
 		'console_scripts': [
 			'microstatistics-start = microstatistics.command_line:main'
