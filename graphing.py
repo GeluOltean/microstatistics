@@ -5,7 +5,6 @@ from math import ceil
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib.ticker import AutoMinorLocator
-from diversities import self.__df_proportion
 from scipy.cluster import hierarchy as hc
 from scipy.spatial import distance as dist
 from sklearn.manifold import MDS
