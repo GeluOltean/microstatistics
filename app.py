@@ -1,10 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QCoreApplication, Qt
-from PyQt5.QtGui import QIcon, QColor
+# from PyQt5.QtGui import QIcon, QColor, QStandardItemModel, QStandardItem
+from PyQt5.QtGui import *
 from PyQt5.QtWidgets import (QAction, QMessageBox, QCalendarWidget, QFontDialog,
 QColorDialog, QTextEdit, QFileDialog, QCheckBox, QProgressBar, QComboBox,
 QLabel, QStyleFactory, QLineEdit, QInputDialog, QApplication, QWidget,
-QMainWindow, QPushButton)
+QMainWindow, QPushButton, QTableWidgetItem)
 import pandas as pd
 import sys
 import traceback
@@ -59,10 +60,15 @@ class Application(QMainWindow, Ui_Table_Window):
             wrongFile = QMessageBox.warning(self, "Error", "Please select a spreadsheet")
         try:
             self.columns = pd.read_excel(fileName, index_col=None, header=None, names=None)
-            self.speciesNames = self.columns.get([0]).values.tolist()
+           
+            self.speciesNames = self.columns.get([0])
+            self.speciesNames = [str(x[0]) for x in self.speciesNames.values]
             self.speciesNames.pop(0)
+
             self.sampleLabels = self.columns.loc[0]
             self.sampleLabels.pop(0)
+            self.sampleLabels = [str(x) for x in self.sampleLabels.values]
+
             self.columns = self.columns.drop([0], axis=1)
             self.columns = self.columns.drop([0], axis=0)
             self.columns.columns = range(len(self.columns.T))
@@ -71,12 +77,29 @@ class Application(QMainWindow, Ui_Table_Window):
             self.dispatcher = SubprocDispatcher(self.columns)
             self.plotter = GraphBuilder(self.columns, self.speciesNames, self.sampleLabels, self.savePath)
 
+            self.__set_table(self.columns)
+
         except Exception as e:
             print(e)
             colError = QMessageBox.warning(self, "Formatting error", 
                 "The spread sheet contains invalid cells, rows or columns which are taken into account.\n\n" + 
                 "Check that data cells containt exclusively numerical data and retry.")
             sys.exit()
+        pass
+
+    def __set_table(self, cols: pd.DataFrame):
+        self.file_table.setColumnCount(len(self.sampleLabels)+1)
+        self.file_table.setHorizontalHeaderLabels([""] +self.sampleLabels)
+
+        for row_number, row_data in enumerate(self.columns.values):
+            self.file_table.insertRow(row_number)
+            # name = QTableWidgetItem(str(self.speciesNames[row_number]))
+            name = QTableWidgetItem(self.speciesNames[row_number])
+            self.file_table.setItem(row_number, 0, name)
+
+            for column_number, data in enumerate(row_data):
+                item = QTableWidgetItem(str(data))
+                self.file_table.setItem(row_number, column_number+1, item)
         pass
     
     def select_save_path(self):
