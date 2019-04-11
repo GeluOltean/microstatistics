@@ -77,7 +77,8 @@ class Application(QMainWindow, Ui_Table_Window):
             self.dispatcher = SubprocDispatcher(self.columns)
             self.plotter = GraphBuilder(self.columns, self.speciesNames, self.sampleLabels, self.savePath)
 
-            self.__set_table(self.columns)
+            # populate table
+            self.__set_table()
 
         except Exception as e:
             print(e)
@@ -87,7 +88,7 @@ class Application(QMainWindow, Ui_Table_Window):
             sys.exit()
         pass
 
-    def __set_table(self, cols: pd.DataFrame):
+    def __set_table(self):
         self.file_table.setColumnCount(len(self.sampleLabels)+1)
         self.file_table.setHorizontalHeaderLabels([""] +self.sampleLabels)
 
