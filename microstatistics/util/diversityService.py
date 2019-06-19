@@ -30,7 +30,7 @@ class DiversityService(object):
     @staticmethod
     def compute_index(data: DataFrame, strategy: str, size: int = 100) -> DataFrame:
         if strategy == DiversityService.FISHER:
-            return data.apply(self.diversities[DiversityService.FISHER])
+            return data.apply(DiversityService.diversities[DiversityService.FISHER])
 
         elif strategy == DiversityService.SIMPSON:
             return data.apply(DiversityService.diversities[DiversityService.SIMPSON])
@@ -45,7 +45,8 @@ class DiversityService(object):
             return data.apply(lambda x: DiversityService.diversities[DiversityService.HURLBERT](x, size))
 
         else:
-            raise ValueError(f"Strategy not found. Please select one from the {DiversityService.__class__.__name__} constants.")
+            raise ValueError(f"Strategy not found. Please select one from the {DiversityService.__class__.__name__} "
+                             f"constants.")
 
     @staticmethod
     def compute_bfoi(data: DataFrame) -> DataFrame:
