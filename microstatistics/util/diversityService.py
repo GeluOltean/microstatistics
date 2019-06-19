@@ -6,7 +6,7 @@ from sklearn.manifold import MDS
 from typing import Dict
 
 from microstatistics.util.diversities import df_shannon, df_fisher, df_simpson, df_equitability, df_hurlbert, \
-    df_proportion, df_bfoi, FISHER, SIMPSON, SHANNON, EQUITABILITY, HURLBERT
+    df_proportion, df_bfoi, FISHER, SIMPSON, SHANNON, EQUITABILITY, HURLBERT, BFOI
 
 
 class DiversityService(object):
@@ -15,7 +15,8 @@ class DiversityService(object):
         SIMPSON: df_simpson,
         SHANNON: df_shannon,
         EQUITABILITY: df_equitability,
-        HURLBERT: df_hurlbert
+        HURLBERT: df_hurlbert,
+        BFOI: df_bfoi
     }
 
     def __init__(self) -> None:
@@ -23,20 +24,23 @@ class DiversityService(object):
 
     @staticmethod
     def compute_index(data: DataFrame, strategy: str, size: int = 100) -> DataFrame:
-        if strategy == DiversityService.FISHER:
-            return data.apply(DiversityService.diversities[DiversityService.FISHER])
+        if strategy == FISHER:
+            return data.apply(DiversityService.diversities[FISHER])
 
-        elif strategy == DiversityService.SIMPSON:
-            return data.apply(DiversityService.diversities[DiversityService.SIMPSON])
+        elif strategy == SIMPSON:
+            return data.apply(DiversityService.diversities[SIMPSON])
 
-        elif strategy == DiversityService.SHANNON:
-            return data.apply(DiversityService.diversities[DiversityService.SHANNON])
+        elif strategy == SHANNON:
+            return data.apply(DiversityService.diversities[SHANNON])
 
-        elif strategy == DiversityService.EQUITABILITY:
-            return data.apply(DiversityService.diversities[DiversityService.EQUITABILITY])
+        elif strategy == EQUITABILITY:
+            return data.apply(DiversityService.diversities[EQUITABILITY])
 
-        elif strategy == DiversityService.HURLBERT:
-            return data.apply(lambda x: DiversityService.diversities[DiversityService.HURLBERT](x, size))
+        elif strategy == HURLBERT:
+            return data.apply(lambda x: DiversityService.diversities[HURLBERT](x, size))
+
+        elif strategy == BFOI:
+            return data.apply(DiversityService.diversities[BFOI])
 
         else:
             raise ValueError(f"Strategy not found. Please select one from the {DiversityService.__class__.__name__} "
