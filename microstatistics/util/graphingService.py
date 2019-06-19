@@ -1,4 +1,3 @@
-import numpy as np
 import os
 from math import ceil
 from matplotlib import pyplot as plt
@@ -9,6 +8,8 @@ from scipy.spatial import distance as dist
 from sklearn.manifold import MDS
 from pandas import DataFrame
 
+from microstatistics.util.diversities import *
+
 plt.style.use("seaborn-whitegrid")
 plt.rcParams['pdf.fonttype'] = 42
 plt.rcParams['ps.fonttype'] = 42
@@ -16,27 +17,43 @@ plt.rcParams['svg.fonttype'] = 'none'
 
 
 class DiversityGraphService(object):
+    FISHER = "Fisher diversity"
+    SIMPSON = "Simpson diversity"
+    SHANNON = "Shannon diversity"
+    EQUITABILITY = "Equitability"
+    HURLBERT = "Hurlbert diversity"
+
+    diversities = {
+        FISHER: df_fisher,
+        SIMPSON: df_simpson,
+        SHANNON: df_shannon,
+        EQUITABILITY: df_equitability,
+        HURLBERT: df_hurlbert
+    }
+
     def __init__(self):
-        self.df: DataFrame
-        self.sample_labels: list
-        self.species_labels: list
-        self.save_location: str
+        self.df: DataFrame = DataFrame([])
+        self.sample_labels: list = []
+        self.species_labels: list = []
+        self.save_location: str = ""
 
-    def graph_index(self, lst: list, title: str):
-        plt.figure(dpi=200, figsize=(3, 12))
-        yaxis = [x + 1 for x in range(len(lst))]
-        plt.plot(lst, yaxis)
-        plt.title(title)
-        plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
-        plt.gca().set_ylim(1, len(yaxis))
-        plt.gca().set_xlim(0, max(lst) * 1.5)
-        plt.yticks(yaxis, self.sample_labels)
-        plt.ylabel("Sample number")
-        plt.fill_betweenx(yaxis, lst)
+    def graph_index(self, type: str):
+        if type == self.FISHER:
 
-        save_name = f"/{title}.svg"
-        plt.savefig(self.save_location + save_name)
-        plt.close()
+        # plt.figure(dpi=200, figsize=(3, 12))
+        # yaxis = [x + 1 for x in range(len(lst))]
+        # plt.plot(lst, yaxis)
+        # plt.title(title)
+        # plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+        # plt.gca().set_ylim(1, len(yaxis))
+        # plt.gca().set_xlim(0, max(lst) * 1.5)
+        # plt.yticks(yaxis, self.sample_labels)
+        # plt.ylabel("Sample number")
+        # plt.fill_betweenx(yaxis, lst)
+        #
+        # save_name = f"/{title}.svg"
+        # plt.savefig(self.save_location + save_name)
+        # plt.close()
 
     def graph_index_batch(self, dic: dict):
         for title, arr in dic.items():
