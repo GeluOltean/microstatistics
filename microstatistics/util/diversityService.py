@@ -69,7 +69,7 @@ class DiversityService(object):
         return hierarchy.linkage(item_distance, method="average")
 
     @staticmethod
-    def compute_nmds(data: DataFrame, dimensions: int, runs: int) -> Dict[str,]:
+    def compute_nmds(data: DataFrame, dimensions: int, runs: int) -> Dict:
         item_distance = distance.pdist(data.T.values, metric="braycurtis")
         square_dist = distance.squareform(item_distance)
         nmds = MDS(n_components=dimensions, metric=False, dissimilarity="precomputed", max_iter=runs, n_init=30)
