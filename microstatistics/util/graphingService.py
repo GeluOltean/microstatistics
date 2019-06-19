@@ -1,12 +1,13 @@
 import os
+from typing import List
+
+import numpy
 from math import ceil
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib.ticker import AutoMinorLocator
 from scipy.cluster import hierarchy as hc
-from scipy.spatial import distance as dist
-from sklearn.manifold import MDS
-from pandas import DataFrame
+from pandas import DataFrame, Series
 
 from microstatistics.util.diversities import *
 
@@ -18,159 +19,116 @@ plt.rcParams['svg.fonttype'] = 'none'
 
 class GraphingService(object):
     def __init__(self):
-        self.df: DataFrame = DataFrame([])
-        self.sample_labels: list = []
-        self.species_labels: list = []
-        self.save_location: str = ""
+        super().__init__()
 
-    def graph_index(self, lst: list, title: str):
+    @staticmethod
+    def graph_index(save_path: str, series: Series, title: str, labels: List[str]):
+        """For use to plot graphs of diversity indices, as well as percentage graphs."""
         plt.figure(dpi=200, figsize=(3, 12))
-        yaxis = [x + 1 for x in range(len(lst))]
-        plt.plot(lst, yaxis)
+        y_axis = [x + 1 for x in range(series.count())]
+        plt.plot(series, y_axis)
         plt.title(title)
         plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
-        plt.gca().set_ylim(1, len(yaxis))
-        plt.gca().set_xlim(0, max(lst) * 1.5)
-        plt.yticks(yaxis, self.sample_labels)
+        plt.gca().set_ylim(1, len(y_axis))
+        plt.gca().set_xlim(0, max(series) * 1.5)
+        plt.yticks(y_axis, labels)
         plt.ylabel("Sample number")
-        plt.fill_betweenx(yaxis, lst)
+        plt.fill_betweenx(y_axis, series)
 
         save_name = f"/{title}.svg"
-        plt.savefig(self.save_location + save_name)
+        plt.savefig(save_path + save_name)
         plt.close()
 
-    def graph_percentages(self, index: int, title: str):
-        holder = self.df_proportion(self.df.copy())
-        holder = holder.replace(np.nan, 0)
-        plt.figure(dpi=200, figsize=(3, 12))
-        yaxis = [x + 1 for x in range(len(holder.T))]
-        plt.title(title)
-        plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
-        plt.gca().set_ylim(1, len(yaxis))
-        plt.gca().set_xlim(0, 100)
-        plt.yticks(yaxis, self.sample_labels)
-        plt.plot(holder.iloc[index], yaxis)
-        plt.ylabel("Sample number")
-        plt.fill_betweenx(yaxis, holder.iloc[index])
-
-        save_name = f"/{title}.svg"
-        plt.savefig(self.save_location + save_name)
-        plt.close()
-
-    def graph_morphogroups(self):
-        holder = self.df_proportion(self.df.copy())
-        holder = holder.transpose() * 100
+    @staticmethod
+    def graph_morphogroups(save_path: str, data: DataFrame, labels: List[str]):
         morphogroups = ('M1', 'M2a', 'M2b', 'M2c', 'M3a', 'M3b', 'M3c', 'M4a',
                         'M4b')
 
-        global_max = max(holder.max().values)
-        yaxis = [x + 1 for x in range(len(holder[1]))]
+        global_max = max(data.max().values)
+        y_axis = [x + 1 for x in range(data[0].count())]
 
-        if not os.path.isdir(self.save_location + "/morphogroups"):
-            os.mkdir(self.save_location + "/morphogroups")
-        save_location_morphs = self.save_location + "/morphogroups"
+        if not os.path.isdir(save_path + "/morphogroups"):
+            os.mkdir(save_path + "/morphogroups")
+        save_location_morphs = save_path + "/morphogroups"
 
         morphogroup_dict = {}
         for i in range(len(morphogroups)):
-            morphogroup_dict[morphogroups[i]] = holder.T.values[i]
+            morphogroup_dict[morphogroups[i]] = data.T.values[i]
 
+        # ensure the same scale
         for k in morphogroup_dict:
-            # ensure the same scale
             local_size = 5 if max(morphogroup_dict[k]) < 5 else max(morphogroup_dict[k])
             local_max = ((local_size * 100) / global_max) / 100
 
             plt.figure(dpi=300, figsize=[local_max * 3, 12])
-            plt.plot(morphogroup_dict[k], yaxis)
+            plt.plot(morphogroup_dict[k], y_axis)
             plt.title(k)
             plt.gca().set_xlim(0)
             if ceil(max(morphogroup_dict[k])) < 5:
                 plt.gca().set_xlim(0, 5)
             else:
                 plt.gca().set_xlim(0)
-            plt.gca().set_ylim(1, len(yaxis))
+            plt.gca().set_ylim(1, len(y_axis))
             plt.gca().xaxis.set_minor_locator(AutoMinorLocator(n=5))
             plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
-            plt.yticks(yaxis, self.sample_labels)
-            plt.fill_betweenx(yaxis, morphogroup_dict[k])
+            plt.yticks(y_axis, labels)
+            plt.fill_betweenx(y_axis, morphogroup_dict[k])
             plt.savefig(save_location_morphs + f"/{k}.svg")
             plt.close(k)
 
-    def graph_epi_inf_detailed(self):
+    @staticmethod
+    def graph_epi_inf_detailed(save_path: str, data: DataFrame):
         """Represents the epifaunal to infaunal proportions by displaying foram
         proportions by their respective environment. Requires a dataframe object
         as input. """
-        frame = self.df.copy()
-        holder = self.df_proportion(frame) * 100
-        # holder.iloc[0] gets the first row
-        epifaunal = holder.iloc[0]
-        inf_shallow = holder.iloc[1] + epifaunal
-        inf_deep = holder.iloc[2] + inf_shallow
-        inf_undetermined = holder.iloc[3] + inf_deep
+        epifaunal = data.iloc[0]
+        inf_shallow = data.iloc[1] + epifaunal
+        inf_deep = data.iloc[2] + inf_shallow
+        inf_undetermined = data.iloc[3] + inf_deep
 
         plt.figure(dpi=200, figsize=(3, 12))
-        yaxis = [x + 1 for x in range(len(holder.T))]
+        y_axis = [x + 1 for x in range(data.T.count())]
         plt.title("Detailed Epifaunal to Infaunal proportions")
         plt.ylabel("Sample number")
         plt.xlabel("Percentage")
 
-        plt.plot(epifaunal, yaxis, '#52A55C', label='Epifaunal')
-        plt.plot(inf_shallow, yaxis, '#236A62', label='Inf. Shallow')
-        plt.plot(inf_deep, yaxis, '#2E4372', label='Inf. Deep')
-        plt.plot(inf_undetermined, yaxis, '#535353', label='Inf. Undetermined')
+        plt.plot(epifaunal, y_axis, '#52A55C', label='Epifaunal')
+        plt.plot(inf_shallow, y_axis, '#236A62', label='Inf. Shallow')
+        plt.plot(inf_deep, y_axis, '#2E4372', label='Inf. Deep')
+        plt.plot(inf_undetermined, y_axis, '#535353', label='Inf. Undetermined')
 
-        plt.fill_betweenx(yaxis, epifaunal, facecolor='#52A55C')
-        plt.fill_betweenx(yaxis, epifaunal, inf_shallow, facecolor='#236A62')
-        plt.fill_betweenx(yaxis, inf_shallow, inf_deep, facecolor='#2E4372')
-        plt.fill_betweenx(yaxis, inf_deep, inf_undetermined, facecolor='#535353')
+        plt.fill_betweenx(y_axis, epifaunal, facecolor='#52A55C')
+        plt.fill_betweenx(y_axis, epifaunal, inf_shallow, facecolor='#236A62')
+        plt.fill_betweenx(y_axis, inf_shallow, inf_deep, facecolor='#2E4372')
+        plt.fill_betweenx(y_axis, inf_deep, inf_undetermined, facecolor='#535353')
 
         plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
-        plt.yticks(yaxis)
+        plt.yticks(y_axis)
         plt.gca().set_xlim(0, 100)
-        plt.gca().set_ylim(1, len(yaxis))
+        plt.gca().set_ylim(1, len(y_axis))
 
         plt.subplot(111).legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
                                 fancybox=True, shadow=True, ncol=5, borderaxespad=2)
 
         save_name = "/Detailed Epi-Infaunal.svg"
-        plt.savefig(self.save_location + save_name)
+        plt.savefig(save_path + save_name)
 
-        # MULTIVARIATE INDICES
-
-    def graph_sample_dendrogram(self):
-        frame = self.df.copy()
-        label = list(range(1, len(frame.T) + 1))
-        sample_distance = dist.pdist(frame.T, metric="braycurtis")
+    @staticmethod
+    def graph_dendrogram(save_path: str, linkage: numpy.ndarray, title: str, labels):
+        """For use in both R and Q mode dendrogram rendering."""
         plt.figure(dpi=500)
-        linkage = hc.linkage(sample_distance, method="average")
-        hc.dendrogram(linkage, labels=label)
-        plt.suptitle("R-mode Dendrogram (Bray-Curtis)")
+        hc.dendrogram(linkage, labels=labels)
+        plt.suptitle(title)
 
-        save_name = "/R-mode Dendrogram.svg"
-        plt.savefig(self.save_location + save_name)
+        save_name = f"/{title}.svg"
+        plt.savefig(save_path + save_name)
 
-    def graph_species_dendrogram(self):
-        frame = self.df.copy()
-        label = list(range(1, len(frame) + 1))
-        species_distance = dist.pdist(frame, metric="braycurtis")
-        plt.figure(dpi=800)
-        linkage = hc.linkage(species_distance, method="average")
-        hc.dendrogram(linkage, orientation="left", labels=label)
-        plt.suptitle("Q-mode Dendrogram (Bray-Curtis)")
+    @staticmethod
+    def graph_nmds(save_path: str, nmds_results: dict, labels):
+        pos0 = nmds_results["pos0"]
+        pos1 = nmds_results["pos1"]
+        stress = nmds_results["stress"]
 
-        save_name = "/Q-mode Dendrogram.svg"
-        plt.savefig(self.save_location + save_name)
-
-    def graph_nmds(self, frame, dim, runs, saveloc: str, labels: list):
-        sample_distance = dist.pdist(frame.T, metric="braycurtis")
-        square_dist = dist.squareform(sample_distance)
-
-        nmds = MDS(n_components=dim, metric=False, dissimilarity="precomputed",
-                   max_iter=runs, n_init=30)
-        pos = nmds.fit(square_dist).embedding_
-        stress = nmds.fit(square_dist).stress_
-
-        pos0 = pos[:, 0].tolist()
-        pos1 = pos[:, 1].tolist()
         fig, ax = plt.subplots()
         ax.scatter(pos0, pos1)
         for i, x in enumerate(labels):
@@ -179,24 +137,4 @@ class GraphingService(object):
         ax.set_title(f"Stress = {str(stress)}")
 
         save_name = "/nMDS.svg"
-        plt.savefig(self.save_location + save_name)
-
-    def df_proportion(self):
-        holder = self.df.copy()
-        for i in range(len(holder.T)):
-            holder[i] = holder[i].apply(lambda x: x if x == 0 else x / holder[i].sum())
-        return holder
-
-    def df_bfoi(self, frame: DataFrame):
-        results = []
-        holder = frame.copy()
-        for i in range(len(holder.T)):
-            oxic = holder[i][1]
-            disoxic = holder[i][2]
-            suboxic = holder[i][3]
-            if oxic == 0:
-                bfoi = 50 * (suboxic / (disoxic + suboxic) - 1)
-            else:
-                bfoi = 100 * oxic / (oxic + disoxic)
-            results.append(bfoi)
-        return results
+        plt.savefig(save_path + save_name)
