@@ -78,13 +78,13 @@ def df_equitability(frame):
     shannon = df_shannon(frame)
     for i in range(len(holder.T)):
         length = holder[i].count()
-        equit = shannon[i] / math.log(length)
-        results.append(equit)
+        equitability = shannon[i] / math.log(length)
+        results.append(equitability)
     return results
 
 
 def df_bfoi(frame):
-    """Calculates the Benthic Foraminifera Oxigenation Index according to Kaminski. Requires a dataframe object as
+    """Calculates the Benthic Foraminifera Oxygenation Index according to Kaiho. Requires a dataframe object as
     input. Returns a list containing the results. """
     results = []
     holder = frame.copy()
