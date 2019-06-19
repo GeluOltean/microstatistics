@@ -59,3 +59,11 @@ def df_bfoi(series: Series) -> float:
         return 50 * (suboxic / (disoxic + suboxic) - 1)
     else:
         return 100 * oxic / (oxic + disoxic)
+
+
+FISHER = "Fisher diversity"
+SIMPSON = "Simpson diversity"
+SHANNON = "Shannon diversity"
+EQUITABILITY = "Equitability"
+HURLBERT = "Hurlbert diversity"
+BFOI = "Benthic foraminifera oxygenation index"

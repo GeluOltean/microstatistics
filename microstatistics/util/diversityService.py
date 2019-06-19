@@ -6,16 +6,10 @@ from sklearn.manifold import MDS
 from typing import Dict
 
 from microstatistics.util.diversities import df_shannon, df_fisher, df_simpson, df_equitability, df_hurlbert, \
-    df_proportion, df_bfoi
+    df_proportion, df_bfoi, FISHER, SIMPSON, SHANNON, EQUITABILITY, HURLBERT
 
 
 class DiversityService(object):
-    FISHER = "Fisher diversity"
-    SIMPSON = "Simpson diversity"
-    SHANNON = "Shannon diversity"
-    EQUITABILITY = "Equitability"
-    HURLBERT = "Hurlbert diversity"
-
     diversities = {
         FISHER: df_fisher,
         SIMPSON: df_simpson,
