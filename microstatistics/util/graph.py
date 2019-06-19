@@ -1,4 +1,3 @@
-import pandas
 import numpy as np
 import os
 from math import ceil
@@ -8,6 +7,7 @@ from matplotlib.ticker import AutoMinorLocator
 from scipy.cluster import hierarchy as hc
 from scipy.spatial import distance as dist
 from sklearn.manifold import MDS
+from pandas import DataFrame
 
 plt.style.use("seaborn-whitegrid")
 plt.rcParams['pdf.fonttype'] = 42
@@ -15,12 +15,12 @@ plt.rcParams['ps.fonttype'] = 42
 plt.rcParams['svg.fonttype'] = 'none'
 
 
-class GraphBuilder(object):
-    def __init__(self, df: pandas.DataFrame, species_labels: list, sample_labels: list, savelocation: str):
-        self.df = df.copy()
-        self.sample_labels = sample_labels
-        self.species_labels = species_labels
-        self.savelocation = savelocation
+class DiversityGraphService(object):
+    def __init__(self):
+        self.df: DataFrame
+        self.sample_labels: list
+        self.species_labels: list
+        self.save_location: str
 
     def graph_index(self, lst: list, title: str):
         plt.figure(dpi=200, figsize=(3, 12))
@@ -34,8 +34,8 @@ class GraphBuilder(object):
         plt.ylabel("Sample number")
         plt.fill_betweenx(yaxis, lst)
 
-        savename = f"/{title}.svg"
-        plt.savefig(self.savelocation + savename)
+        save_name = f"/{title}.svg"
+        plt.savefig(self.save_location + save_name)
         plt.close()
 
     def graph_index_batch(self, dic: dict):
@@ -56,8 +56,8 @@ class GraphBuilder(object):
         plt.ylabel("Sample number")
         plt.fill_betweenx(yaxis, holder.iloc[index])
 
-        savename = f"/{title}.svg"
-        plt.savefig(self.savelocation + savename)
+        save_name = f"/{title}.svg"
+        plt.savefig(self.save_location + save_name)
         plt.close()
 
     def graph_morphogroups(self):
@@ -69,24 +69,24 @@ class GraphBuilder(object):
         global_max = max(holder.max().values)
         yaxis = [x + 1 for x in range(len(holder[1]))]
 
-        if not os.path.isdir(self.savelocation + "/morphogroups"):
-            os.mkdir(self.savelocation + "/morphogroups")
-        save_location_morphs = self.savelocation + "/morphogroups"
+        if not os.path.isdir(self.save_location + "/morphogroups"):
+            os.mkdir(self.save_location + "/morphogroups")
+        save_location_morphs = self.save_location + "/morphogroups"
 
-        morpho_dict = {}
+        morphogroup_dict = {}
         for i in range(len(morphogroups)):
-            morpho_dict[morphogroups[i]] = holder.T.values[i]
+            morphogroup_dict[morphogroups[i]] = holder.T.values[i]
 
-        for k in morpho_dict:
+        for k in morphogroup_dict:
             # ensure the same scale
-            local_size = 5 if max(morpho_dict[k]) < 5 else max(morpho_dict[k])
+            local_size = 5 if max(morphogroup_dict[k]) < 5 else max(morphogroup_dict[k])
             local_max = ((local_size * 100) / global_max) / 100
 
             plt.figure(dpi=300, figsize=[local_max * 3, 12])
-            plt.plot(morpho_dict[k], yaxis)
+            plt.plot(morphogroup_dict[k], yaxis)
             plt.title(k)
             plt.gca().set_xlim(0)
-            if ceil(max(morpho_dict[k])) < 5:
+            if ceil(max(morphogroup_dict[k])) < 5:
                 plt.gca().set_xlim(0, 5)
             else:
                 plt.gca().set_xlim(0)
@@ -94,7 +94,7 @@ class GraphBuilder(object):
             plt.gca().xaxis.set_minor_locator(AutoMinorLocator(n=5))
             plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
             plt.yticks(yaxis, self.sample_labels)
-            plt.fill_betweenx(yaxis, morpho_dict[k])
+            plt.fill_betweenx(yaxis, morphogroup_dict[k])
             plt.savefig(save_location_morphs + f"/{k}.svg")
             plt.close(k)
 
@@ -134,8 +134,8 @@ class GraphBuilder(object):
         plt.subplot(111).legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
                                 fancybox=True, shadow=True, ncol=5, borderaxespad=2)
 
-        savename = "/Detailed Epi-Infaunal.svg"
-        plt.savefig(self.savelocation + savename)
+        save_name = "/Detailed Epi-Infaunal.svg"
+        plt.savefig(self.save_location + save_name)
 
         # MULTIVARIATE INDICES
 
@@ -145,26 +145,26 @@ class GraphBuilder(object):
         sample_distance = dist.pdist(frame.T, metric="braycurtis")
         plt.figure(dpi=500)
         linkage = hc.linkage(sample_distance, method="average")
-        dendrog = hc.dendrogram(linkage, labels=label)
+        hc.dendrogram(linkage, labels=label)
         plt.suptitle("R-mode Dendrogram (Bray-Curtis)")
 
-        savename = "/R-mode Dendrogram.svg"
-        plt.savefig(self.savelocation + savename)
+        save_name = "/R-mode Dendrogram.svg"
+        plt.savefig(self.save_location + save_name)
 
     def graph_species_dendrogram(self):
         frame = self.df.copy()
-        labl = list(range(1, len(frame) + 1))
+        label = list(range(1, len(frame) + 1))
         species_distance = dist.pdist(frame, metric="braycurtis")
         plt.figure(dpi=800)
         linkage = hc.linkage(species_distance, method="average")
-        dendrog = hc.dendrogram(linkage, orientation="left", labels=labl)
+        hc.dendrogram(linkage, orientation="left", labels=label)
         plt.suptitle("Q-mode Dendrogram (Bray-Curtis)")
 
-        savename = "/Q-mode Dendrogram.svg"
-        plt.savefig(self.savelocation + savename)
+        save_name = "/Q-mode Dendrogram.svg"
+        plt.savefig(self.save_location + save_name)
 
     def graph_nmds(self, frame, dim, runs, saveloc: str, labels: list):
-        # labl = list(range(1, len(frame.T)+1))
+        # label = list(range(1, len(frame.T)+1))
         sample_distance = dist.pdist(frame.T, metric="braycurtis")
         square_dist = dist.squareform(sample_distance)
 
@@ -182,22 +182,19 @@ class GraphBuilder(object):
         fig.suptitle("nMDS (Bray-Curtis)")
         ax.set_title(f"Stress = {str(stress)}")
 
-        savename = "/nMDS.svg"
-        plt.savefig(self.savelocation + savename)
+        save_name = "/nMDS.svg"
+        plt.savefig(self.save_location + save_name)
 
-    def df_proportion(self, frame: pandas.DataFrame):
+    def df_proportion(self):
         holder = self.df.copy()
         for i in range(len(holder.T)):
             holder[i] = holder[i].apply(lambda x: x if x == 0 else x / holder[i].sum())
         return holder
 
-    def df_bfoi(self, frame: pandas.DataFrame):
+    def df_bfoi(self, frame: DataFrame):
         results = []
         holder = frame.copy()
         for i in range(len(holder.T)):
-            # oxic = holder[i][0]
-            # disoxic = holder[i][1]
-            # suboxic = holder[i][2]
             oxic = holder[i][1]
             disoxic = holder[i][2]
             suboxic = holder[i][3]
