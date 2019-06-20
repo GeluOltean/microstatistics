@@ -7,6 +7,9 @@ import pandas as pd
 from microstatistics.gui.license import License
 from microstatistics.gui.manual import Manual
 from microstatistics.gui.table import Table_Window
+from microstatistics.util.diversities import SHANNON, FISHER, SIMPSON, EQUITABILITY
+from microstatistics.util.diversityService import DiversityService
+from microstatistics.util.graphingService import GraphingService
 
 
 class Application(QMainWindow, Table_Window):
@@ -87,47 +90,107 @@ class Application(QMainWindow, Table_Window):
 
     def compute(self):
         if self.shannon_check.isChecked():
-            pass
+            GraphingService.graph_index(
+                save_path=self.save_path,
+                title=SHANNON,
+                labels=self.sample_labels,
+                data=DiversityService.compute_index(self.columns, SHANNON)
+            )
 
         if self.fisher_check.isChecked():
-            pass
+            GraphingService.graph_index(
+                save_path=self.save_path,
+                title=FISHER,
+                labels=self.sample_labels,
+                data=DiversityService.compute_index(self.columns, FISHER)
+            )
+            print(DiversityService.compute_index(self.columns, FISHER).values)
 
         if self.simpson_check.isChecked():
-            pass
+            GraphingService.graph_index(
+                save_path=self.save_path,
+                title=SIMPSON,
+                labels=self.sample_labels,
+                data=DiversityService.compute_index(self.columns, SIMPSON)
+            )
 
         if self.equit_check.isChecked():
-            pass
+            GraphingService.graph_index(
+                save_path=self.save_path,
+                title=EQUITABILITY,
+                labels=self.sample_labels,
+                data=DiversityService.compute_index(self.columns, EQUITABILITY)
+            )
 
         if self.hurl_check.isChecked():
-            pass
+            pass  # also needs size
 
         if self.rel_check.isChecked():
-            pass
+            pass  # also needs size
 
         if self.pb_check.isChecked():
-            pass
+            GraphingService.graph_index(
+                save_path=self.save_path,
+                title="Planktonic-Benthic Ration",
+                labels=self.sample_labels,
+                data=DiversityService.compute_percentages(self.columns)[0]
+            )
 
         if self.epiinf_check.isChecked():
-            pass
+            GraphingService.graph_index(
+                save_path=self.save_path,
+                title="Epifaunal-Infaunal Ration",
+                labels=self.sample_labels,
+                data=DiversityService.compute_percentages(self.columns)[0]
+            )
 
         if self.epiinfdet_check.isChecked():
-            pass
+            GraphingService.graph_epi_inf_detailed(
+                save_path=self.save_path,
+                data=DiversityService.compute_percentages(self.columns)[0]
+            )
 
         if self.morpho_check.isChecked():
             pass
+            # GraphingService.graph_morphogroups(
+            #     save_path=self.save_path,
+            #     labels=self.sample_labels,
+            #     data=DiversityService.compute_morphogroups(self.columns)
+            # )
 
         if self.bfoi_check.isChecked():
-            pass
+            GraphingService.graph_index(
+                save_path=self.save_path,
+                title="BFOI",
+                labels=self.sample_labels,
+                data=DiversityService.compute_bfoi(self.columns)[0]
+            )
 
         if self.dendrog_check.isChecked():
-            pass
+            GraphingService.graph_dendrogram(
+                save_path=self.save_path,
+                title="R-mode Dendrogram (Bray-Curtis)",
+                labels=[x for x in range(1, self.sample_labels.count() + 1)],
+                data=DiversityService.compute_linkage(data=self.columns.T)
+            )
+            GraphingService.graph_dendrogram(
+                save_path=self.save_path,
+                title="Q-mode Dendrogram (Bray-Curtis)",
+                labels=self.species_labels,
+                data=DiversityService.compute_linkage(data=self.columns)
+            )
 
         if self.nmds_check.isChecked():
-            pass
+            pass  # needs two sizes
+            # GraphingService.graph_nmds(
+            #     save_path=self.save_path,
+            #     labels=self.sample_labels.values,
+            #     data=DiversityService.compute_nmds(self.columns)
+            # )
 
         # Once finished:
         QMessageBox.information(self, 'Finished', f'The selected operations have been performed. The plots have been '
-                                f'saved in {self.savePath}')
+                                f'saved in {self.save_path}')
 
 
 def run():
