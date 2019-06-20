@@ -53,14 +53,32 @@ class Application(QMainWindow, Table_Window):
 
             self.species_labels = self.columns.get([0]).values.tolist()
             self.species_labels.pop(0)
+            self.species_labels = [x[0] for x in self.species_labels]
+
             self.sample_labels = self.columns.loc[0]
             self.sample_labels.pop(0)
 
             self.columns = self.columns.drop([0], axis=1)
             self.columns = self.columns.drop([0], axis=0)
             self.columns.columns = range(len(self.columns.T))
+
+            # populate table
+            self.__set_table()
         except Exception as e:
             print(e)
+
+    def __set_table(self):
+        self.file_table.setColumnCount(len(self.sample_labels) + 1)
+        self.file_table.setHorizontalHeaderLabels([""] + self.sample_labels)
+
+        for row_number, row_data in enumerate(self.columns.values):
+            self.file_table.insertRow(row_number)
+            name = QTableWidgetItem(self.species_labels[row_number])
+            self.file_table.setItem(row_number, 0, name)
+
+            for column_number, data in enumerate(row_data):
+                item = QTableWidgetItem(str(data))
+                self.file_table.setItem(row_number, column_number + 1, item)
 
     def select_save_path(self):
         dialog = QtWidgets.QFileDialog()
