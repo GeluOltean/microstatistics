@@ -9,8 +9,6 @@ from matplotlib.ticker import AutoMinorLocator
 from scipy.cluster import hierarchy as hc
 from pandas import DataFrame, Series
 
-from microstatistics.util.diversities import *
-
 plt.style.use("seaborn-whitegrid")
 plt.rcParams['pdf.fonttype'] = 42
 plt.rcParams['ps.fonttype'] = 42
@@ -22,25 +20,25 @@ class GraphingService(object):
         super().__init__()
 
     @staticmethod
-    def graph_index(save_path: str, title: str, labels: List[str], series: Series):
+    def graph_index(save_path: str, title: str, labels: List[str], data: DataFrame):
         """For use to plot graphs of diversity indices, as well as percentage graphs."""
         plt.figure(dpi=200, figsize=(3, 12))
-        y_axis = [x + 1 for x in range(series.count())]
-        plt.plot(series, y_axis)
+        y_axis = [x + 1 for x in range(data.count())]
+        plt.plot(data, y_axis)
         plt.title(title)
         plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
         plt.gca().set_ylim(1, len(y_axis))
-        plt.gca().set_xlim(0, max(series) * 1.5)
+        plt.gca().set_xlim(0, max(data) * 1.5)
         plt.yticks(y_axis, labels)
         plt.ylabel("Sample number")
-        plt.fill_betweenx(y_axis, series)
+        plt.fill_betweenx(y_axis, data)
 
         save_name = f"/{title}.svg"
         plt.savefig(save_path + save_name)
         plt.close()
 
     @staticmethod
-    def graph_morphogroups(save_path: str, data: DataFrame, labels: List[str]):
+    def graph_morphogroups(save_path: str, labels: List[str], data: DataFrame):
         morphogroups = ('M1', 'M2a', 'M2b', 'M2c', 'M3a', 'M3b', 'M3c', 'M4a',
                         'M4b')
 
@@ -114,20 +112,20 @@ class GraphingService(object):
         plt.savefig(save_path + save_name)
 
     @staticmethod
-    def graph_dendrogram(save_path: str, title: str, labels, linkage: numpy.ndarray):
+    def graph_dendrogram(save_path: str, title: str, labels, data: numpy.ndarray):
         """For use in both R and Q mode dendrogram rendering."""
         plt.figure(dpi=500)
-        hc.dendrogram(linkage, labels=labels)
+        hc.dendrogram(data, labels=labels)
         plt.suptitle(title)
 
         save_name = f"/{title}.svg"
         plt.savefig(save_path + save_name)
 
     @staticmethod
-    def graph_nmds(save_path: str, labels, nmds_results: dict):
-        pos0 = nmds_results["pos0"]
-        pos1 = nmds_results["pos1"]
-        stress = nmds_results["stress"]
+    def graph_nmds(save_path: str, labels, data: dict):
+        pos0 = data["pos0"]
+        pos1 = data["pos1"]
+        stress = data["stress"]
 
         fig, ax = plt.subplots()
         ax.scatter(pos0, pos1)
