@@ -115,7 +115,10 @@ class GraphingService(object):
     def graph_dendrogram(save_path: str, title: str, labels, data: numpy.ndarray):
         """For use in both R and Q mode dendrogram rendering."""
         plt.figure(dpi=500)
-        hc.dendrogram(data, labels=labels)
+        if len(labels) > 15:
+            hc.dendrogram(data, labels=labels, orientation="left")
+        else:
+            hc.dendrogram(data, labels=labels)
         plt.suptitle(title)
 
         save_name = f"/{title}.svg"
