@@ -9,7 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Table_Window(object):
+class Table_Window(object):
     def setupUi(self, Table_Window):
         Table_Window.setObjectName("Table_Window")
         Table_Window.setEnabled(True)
