@@ -22,7 +22,7 @@ class GraphingService(object):
         super().__init__()
 
     @staticmethod
-    def graph_index(save_path: str, series: Series, title: str, labels: List[str]):
+    def graph_index(save_path: str, title: str, labels: List[str], series: Series):
         """For use to plot graphs of diversity indices, as well as percentage graphs."""
         plt.figure(dpi=200, figsize=(3, 12))
         y_axis = [x + 1 for x in range(series.count())]
@@ -114,7 +114,7 @@ class GraphingService(object):
         plt.savefig(save_path + save_name)
 
     @staticmethod
-    def graph_dendrogram(save_path: str, linkage: numpy.ndarray, title: str, labels):
+    def graph_dendrogram(save_path: str, title: str, labels, linkage: numpy.ndarray):
         """For use in both R and Q mode dendrogram rendering."""
         plt.figure(dpi=500)
         hc.dendrogram(linkage, labels=labels)
@@ -124,7 +124,7 @@ class GraphingService(object):
         plt.savefig(save_path + save_name)
 
     @staticmethod
-    def graph_nmds(save_path: str, nmds_results: dict, labels):
+    def graph_nmds(save_path: str, labels, nmds_results: dict):
         pos0 = nmds_results["pos0"]
         pos1 = nmds_results["pos1"]
         stress = nmds_results["stress"]
