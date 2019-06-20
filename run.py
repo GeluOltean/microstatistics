@@ -1,3 +1,3 @@
-from app import run
+from microstatistics.app import run
 
 run()
