@@ -26,7 +26,7 @@ def df_fisher(series: Series) -> float:
     """Applies the formula for Fisher's alpha diversity to a pandas Series."""
     d = 1
     summed = series.sum()
-    length = series.count()
+    length = series.replace(0, np.nan).count()
 
     def fisher_func_prime(a):
         return 1 / (summed + a) + length / (a ** 2) - 1 / a
