@@ -7,7 +7,7 @@ import pandas as pd
 from microstatistics.gui.license import License
 from microstatistics.gui.manual import Manual
 from microstatistics.gui.table import Table_Window
-from microstatistics.util.diversities import SHANNON, FISHER, SIMPSON, EQUITABILITY
+from microstatistics.util.diversities import SHANNON, FISHER, SIMPSON, EQUITABILITY, HURLBERT
 from microstatistics.util.diversityService import DiversityService
 from microstatistics.util.graphingService import GraphingService
 
@@ -37,6 +37,12 @@ class Application(QMainWindow, Table_Window):
         self.aboutPage.setupUi(self.about)
 
         self.save_edit.setText("Please choose a save location first.")
+        self.rel_spin.setMinimum(1)
+        self.dim_spin.setMinimum(1)
+        self.run_spin.setMinimum(1)
+        self.rel_spin.setValue(1)
+        self.dim_spin.setValue(1)
+        self.run_spin.setValue(1)
 
         self.read_spreadsheet()
         self.select_save_path()
@@ -65,8 +71,9 @@ class Application(QMainWindow, Table_Window):
             self.columns = self.columns.drop([0], axis=0)
             self.columns.columns = range(len(self.columns.T))
 
-            # populate table
+            # modify interface
             self.__set_table()
+            self.rel_spin.setMaximum(len(self.species_labels))
         except Exception as e:
             print(e)
 
@@ -104,7 +111,6 @@ class Application(QMainWindow, Table_Window):
                 labels=self.sample_labels,
                 data=DiversityService.compute_index(self.columns, FISHER)
             )
-            print(DiversityService.compute_index(self.columns, FISHER).values)
 
         if self.simpson_check.isChecked():
             GraphingService.graph_index(
@@ -123,10 +129,22 @@ class Application(QMainWindow, Table_Window):
             )
 
         if self.hurl_check.isChecked():
-            pass  # also needs size
+            size = self.hurl_spin.value()
+            GraphingService.graph_index(
+                save_path=self.save_path,
+                title=f"{HURLBERT}, size = {size}",
+                labels=self.sample_labels,
+                data=DiversityService.compute_index(self.columns, HURLBERT, size)
+            )
 
         if self.rel_check.isChecked():
-            pass  # also needs size
+            target_row = self.rel_spin.value()
+            GraphingService.graph_index(
+                save_path=self.save_path,
+                title=f"Abundance of species {self.species_labels[target_row-1]}",
+                labels=self.sample_labels,
+                data=(DiversityService.compute_percentages(self.columns)).loc[target_row]
+            )
 
         if self.pb_check.isChecked():
             GraphingService.graph_index(
@@ -147,16 +165,15 @@ class Application(QMainWindow, Table_Window):
         if self.epiinfdet_check.isChecked():
             GraphingService.graph_epi_inf_detailed(
                 save_path=self.save_path,
-                data=DiversityService.compute_percentages(self.columns)[0]
+                data=DiversityService.compute_percentages(self.columns)
             )
 
         if self.morpho_check.isChecked():
-            pass
-            # GraphingService.graph_morphogroups(
-            #     save_path=self.save_path,
-            #     labels=self.sample_labels,
-            #     data=DiversityService.compute_morphogroups(self.columns)
-            # )
+            GraphingService.graph_morphogroups(
+                save_path=self.save_path,
+                labels=self.sample_labels,
+                data=DiversityService.compute_morphogroups(self.columns)
+            )
 
         if self.bfoi_check.isChecked():
             GraphingService.graph_index(
@@ -181,12 +198,17 @@ class Application(QMainWindow, Table_Window):
             )
 
         if self.nmds_check.isChecked():
-            pass  # needs two sizes
-            # GraphingService.graph_nmds(
-            #     save_path=self.save_path,
-            #     labels=self.sample_labels.values,
-            #     data=DiversityService.compute_nmds(self.columns)
-            # )
+            dimensions = self.dim_spin.value()
+            runs = self.run_spin.value()
+            GraphingService.graph_nmds(
+                save_path=self.save_path,
+                labels=self.sample_labels.values,
+                data=DiversityService.compute_nmds(
+                    data=self.columns,
+                    dimensions=dimensions,
+                    runs=runs
+                )
+            )
 
         # Once finished:
         QMessageBox.information(self, 'Finished', f'The selected operations have been performed. The plots have been '
