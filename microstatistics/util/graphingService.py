@@ -43,7 +43,7 @@ class GraphingService(object):
                         'M4b')
 
         global_max = max(data.max().values)
-        y_axis = [x + 1 for x in range(data[0].count())]
+        y_axis = [x + 1 for x in range(data[1].count())]
 
         if not os.path.isdir(save_path + "/morphogroups"):
             os.mkdir(save_path + "/morphogroups")
