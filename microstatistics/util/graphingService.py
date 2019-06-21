@@ -30,7 +30,7 @@ class GraphingService(object):
         plt.gca().set_ylim(1, len(y_axis))
         plt.gca().set_xlim(0, max(data) * 1.5)
         plt.yticks(y_axis, labels)
-        plt.ylabel("Sample number")
+        plt.ylabel("Sample")
         plt.fill_betweenx(y_axis, data)
 
         save_name = f"/{title}.svg"
@@ -85,9 +85,9 @@ class GraphingService(object):
         inf_undetermined = data.iloc[3] + inf_deep
 
         plt.figure(dpi=200, figsize=(3, 12))
-        y_axis = [x + 1 for x in range(data.T.count())]
+        y_axis = [x + 1 for x in range(data.transpose()[1].count())]
         plt.title("Detailed Epifaunal to Infaunal proportions")
-        plt.ylabel("Sample number")
+        plt.ylabel("Sample")
         plt.xlabel("Percentage")
 
         plt.plot(epifaunal, y_axis, '#52A55C', label='Epifaunal')
