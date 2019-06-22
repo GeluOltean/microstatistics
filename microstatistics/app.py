@@ -39,7 +39,7 @@ class Application(QMainWindow, Table_Window):
         self.sample_labels: list = []
         self.species_labels: list = []
 
-        #
+        # functionality
         self.__read_spreadsheet()
         self.__select_save_path()
         self.show()
