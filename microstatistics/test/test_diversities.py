@@ -28,7 +28,8 @@ class TestDiversities(TestCase):
         )
 
     def test_df_proportion(self):
-        correct = [float(0.018182), float(0.036364), float(0.054545), float(0.072727), float(0.090909), float(0.109091), float(0.127273), float(0.145455), float(0.163636), float(0.181818)]
+        correct = [float(0.018182), float(0.036364), float(0.054545), float(0.072727), float(0.090909), float(0.109091),
+                   float(0.127273), float(0.145455), float(0.163636), float(0.181818)]
         to_test = df_proportion(TestDiversities.TESTSERIES)
         for x, y in zip(to_test, correct):
             testing.assert_almost_equal(x, y, 6)
