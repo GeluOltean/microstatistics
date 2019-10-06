@@ -85,9 +85,9 @@ def df_bfoi(series: Series) -> float:
     :param series: pandas Series representing a sample
     :return: the result of the index
     """
-    oxic = series[0]
-    disoxic = series[1]
-    suboxic = series[2]
+    oxic = series[1]
+    disoxic = series[2]
+    suboxic = series[3]
     if oxic == 0:
         return 50 * (suboxic / (disoxic + suboxic) - 1)
     else:

@@ -215,7 +215,7 @@ class Application(QMainWindow, Table_Window):
                 save_path=self.save_path,
                 title="BFOI",
                 labels=self.sample_labels,
-                data=DiversityService.compute_bfoi(self.columns)[0]
+                data=DiversityService.compute_bfoi(self.columns)
             )
 
         if self.dendrog_check.isChecked():
