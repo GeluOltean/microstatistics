@@ -32,6 +32,7 @@ class Application(QMainWindow, Table_Window):
         self.about = QMainWindow()
         self.aboutPage = License()
         self.__set_up_ui()
+        self.setWindowTitle("Microstatistics")
 
         # data state
         self.save_path: str = ""
@@ -48,12 +49,15 @@ class Application(QMainWindow, Table_Window):
         """
         Handles ui constraints, and connects elements to proper functions.
         """
+        self.setupUi(self)
+
         # navigation
         self.manPage.setupUi(self.manual)
         self.aboutPage.setupUi(self.about)
+        self.menuManual.triggered.connect(self.manual.show)
+        self.menuAbout.triggered.connect(self.about.show)
 
         # button functionality
-        self.setupUi(self)
         self.change_btn.clicked.connect(self.__select_save_path)
         self.open_btn.clicked.connect(self.__read_spreadsheet)
         self.run_btn.clicked.connect(self.__compute)
