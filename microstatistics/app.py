@@ -108,7 +108,7 @@ class Application(QMainWindow, Table_Window):
         Populates QtTable with spreadsheet data from state.
         """
         self.file_table.setColumnCount(len(self.sample_labels) + 1)
-        self.file_table.setHorizontalHeaderLabels([""] + self.sample_labels)
+        self.file_table.setHorizontalHeaderLabels([""] + [x for x in self.sample_labels])
 
         for row_number, row_data in enumerate(self.columns.values):
             self.file_table.insertRow(row_number)
