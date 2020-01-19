@@ -41,7 +41,7 @@ def df_fisher(series: Series) -> float:
     """
     d = 1
     summed = series.sum()
-    length = series.replace(0, np.nan).count()
+    length = series.replace(0, np.nan).dropna().count()
 
     def fisher_func_prime(a):
         return 1 / (summed + a) + length / (a ** 2) - 1 / a
@@ -49,7 +49,10 @@ def df_fisher(series: Series) -> float:
     def fisher_func(a):
         return np.log(summed + a) - np.log(a) - length / a
 
-    return optimize.newton(fisher_func, d, fisher_func_prime, maxiter=1000)
+    if length != 0:
+        return optimize.newton(fisher_func, d, fisher_func_prime, maxiter=1000)
+    else:
+        return 0
 
 
 def df_hurlbert(series: Series, correction: int = 100) -> float:
@@ -73,8 +76,11 @@ def df_equitability(series: Series) -> float:
     :param series: pandas Series representing a sample
     :return: the result of the index
     """
-    length = (series.replace(0, np.nan)).count()
-    return df_shannon(series) / math.log(length)
+    length = (series.replace(0, np.nan)).dropna().count()
+    if length != 0:
+        return df_shannon(series) / math.log(length)
+    else:
+        return 0
 
 
 def df_bfoi(series: Series) -> float:
