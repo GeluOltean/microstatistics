@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['microstatistics.py'],
+a = Analysis(['microstatistics\\app.py'],
              pathex=['C:\\yp\\microstatistics'],
              binaries=[],
              datas=[],
@@ -21,12 +21,13 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='run',
+          name='microstatistics',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=True )
+          console=True,
+          icon='microstatistics\\gui\\img\\micro.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
@@ -34,4 +35,4 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='run')
+               name='app')
