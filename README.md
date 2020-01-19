@@ -10,7 +10,27 @@ The software has a number of dependencies, namely `PyQt5`, used for the interfac
 
 ## Installing
 
-Installation is done through pip and launched using a script, `microstatistics-start`. See below for OS specific instructions.
+For Microsoft Windows, an installer is available [here.](https://github.com/GeluOltean/microstatistics/blob/major_refactor/installers/microstatistics_installer.exe) The executable starts an installation wizard which will handle all the required steps in order to install Microstatistics. The wizard will install a local Python distribution along with all the packages our program depends on, and links to them locally. This removes the need to have Python or pip installed separately on your system. 
+
+For MacOS and GNU/Linux installation is done through pip and launched using a script, `microstatistics-start`. See below for additional instruction. 
+
+### Windows
+
+Please make sure you have Python 3 and pip installed from the [official website](https://www.python.org/downloads/windows/). Afterwards, open a powershell window and install the program using the following command:
+
+```
+pip install microstatistics
+```
+
+During installation, in the powershell window, a prompt will appear telling the user that scripts will not be available in powershell, as they are not included in the PATH, and provide a path string to where the `microstatistics-start` script is stored.
+
+Using said script, it is possible to create a shortcut to the script by creating a shortcut to powershell.exe and modifying the target to include the path to the startup script:
+
+```
+powershell.exe -File "[REPLACE WITH YOUR PATH]\microstatistics-start.py"
+```
+
+Afterwards, the shortcut should launch the program.
 
 ### GNU/Linux
 
@@ -33,24 +53,6 @@ pip install microstatistics
 ```
 
 Once installed, the terminal command `microstatistics-start` will launch the software. An easy way to keep the program handy is to make a bash file, such as `microstatistics.sh` containing just the launch command as one line, `microstatistics-start`, and making the file executable.
-
-### Windows
-
-Please make sure you have Python 3 and pip installed from the [official website](https://www.python.org/downloads/windows/). Afterwards, open a powershell window and install the program using the following command:
-
-```
-pip install microstatistics
-```
-
-During installation, in the powershell window, a prompt will appear telling the user that scripts will not be available in powershell, as they are not included in the PATH, and provide a path string to where the `microstatistics-start` script is stored.
-
-Using said script, it is possible to create a shortcut to the script by creating a shortcut to powershell.exe and modifying the target to include the path to the startup script:
-
-```
-powershell.exe -File "[REPLACE WITH YOUR PATH]\microstatistics-start.py"
-```
-
-Afterwards, the shortcut should launch the program.
 
 ## License
 
