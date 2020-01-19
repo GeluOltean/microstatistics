@@ -68,8 +68,8 @@ class Application(QMainWindow, Table_Window):
         self.dim_spin.setMinimum(1)
         self.run_spin.setMinimum(1)
         self.rel_spin.setValue(1)
-        self.dim_spin.setValue(1)
-        self.run_spin.setValue(1)
+        self.dim_spin.setValue(5)
+        self.run_spin.setValue(5)
 
     def __read_spreadsheet(self) -> None:
         """
@@ -108,7 +108,7 @@ class Application(QMainWindow, Table_Window):
         Populates QtTable with spreadsheet data from state.
         """
         self.file_table.setColumnCount(len(self.sample_labels) + 1)
-        self.file_table.setHorizontalHeaderLabels([""] + [x for x in self.sample_labels])
+        self.file_table.setHorizontalHeaderLabels([""] + [str(x) for x in self.sample_labels])
 
         for row_number, row_data in enumerate(self.columns.values):
             self.file_table.insertRow(row_number)
