@@ -10,7 +10,7 @@ The software has a number of dependencies, namely `PyQt5`, used for the interfac
 
 ## Installing
 
-For Microsoft Windows, an installer is available [here.](https://github.com/GeluOltean/microstatistics/blob/major_refactor/installers/microstatistics_installer.exe) The executable starts an installation wizard which will handle all the required steps in order to install Microstatistics. The wizard will install a local Python distribution along with all the packages our program depends on, and links to them locally. This removes the need to have Python or pip installed separately on your system. 
+For Microsoft Windows, an installer is available [here.](https://github.com/GeluOltean/microstatistics/raw/new_master/installers/microstatistics_installer.exe) The executable starts an installation wizard which will handle all the required steps in order to install Microstatistics. The wizard will install a local Python distribution along with all the packages our program depends on, and links to them locally. This removes the need to have Python or pip installed separately on your system. 
 
 For MacOS and GNU/Linux installation is done through pip and launched using a script, `microstatistics-start`. See below for additional instruction. 
 
