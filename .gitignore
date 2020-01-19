@@ -13,5 +13,4 @@ sdist/
 .installed.cfg
 *.egg
 __pycache__/
-
-
+Output/
