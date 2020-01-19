@@ -8,3 +8,5 @@ microstatistics.egg-info/
 *.egg-info
 dist
 build
+venv/
+.idea/
