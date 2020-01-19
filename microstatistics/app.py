@@ -254,3 +254,7 @@ def run():
     app = QtWidgets.QApplication(sys.argv)
     gui = Application()  # assignment required by PyQt, do not remove
     sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    run()
